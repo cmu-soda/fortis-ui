@@ -1,10 +1,10 @@
 import { eventEmitter } from './events'
 
 export enum SpecType {
-  FSP,
-  AUT,
-  FSM,
-  FLTL
+  FSP = 'FSP',
+  AUT = 'AUT',
+  FSM = 'FSM',
+  FLTL = 'FLTL'
 }
 
 export interface Spec {
@@ -29,6 +29,8 @@ export interface SpecStore {
 
   selected?: Spec
 
+  getSpec(name: string, group: SpecGroup): Spec | undefined
+
   addSpec(spec: Spec, group: SpecGroup): void
 
   removeSpec(name: string, group: SpecGroup): void
@@ -48,6 +50,17 @@ export class SimpleSpecStore implements SpecStore {
   propSpecs: Spec[] = []
 
   selected?: Spec
+
+  getSpec(name: string, group: SpecGroup): Spec | undefined {
+    switch (group) {
+      case SpecGroup.System:
+        return this.sysSpecs.find((spec) => spec.name === name)
+      case SpecGroup.Environment:
+        return this.envSpecs.find((spec) => spec.name === name)
+      case SpecGroup.Property:
+        return this.propSpecs.find((spec) => spec.name === name)
+    }
+  }
 
   selectSpec(name: string, group: SpecGroup): void {
     switch (group) {

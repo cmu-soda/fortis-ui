@@ -35,7 +35,7 @@ function onContentChange() {
 
 <template>
   <textarea
-    class="full-width full-height"
+    class="full-width h-100"
     v-model="content"
     @input="onContentInput"
     @change="onContentChange"
