@@ -12,13 +12,28 @@ import { RouterLink } from 'vue-router'
       <div class="me-auto">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <RouterLink class="nav-link" :class="($route.name === 'editor') ? 'active' : ''" to="/editor">Editor</RouterLink>
+            <RouterLink
+              class="nav-link"
+              :class="$route.name === 'editor' ? 'active' : ''"
+              to="/editor"
+              >Editor</RouterLink
+            >
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :class="($route.name === 'robustness') ? 'active' : ''" to="/robustness">Robustness</RouterLink>
+            <RouterLink
+              class="nav-link"
+              :class="$route.name === 'robustness' ? 'active' : ''"
+              to="/robustness"
+              >Robustness</RouterLink
+            >
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :class="($route.name === 'robustify') ? 'active' : ''" to="/robustify">Robustification</RouterLink>
+            <RouterLink
+              class="nav-link"
+              :class="$route.name === 'robustify' ? 'active' : ''"
+              to="/robustify"
+              >Robustification</RouterLink
+            >
           </li>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

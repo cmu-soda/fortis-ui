@@ -1,3 +1,1 @@
-<template>
-  Robustification
-</template>
+<template>Robustification</template>

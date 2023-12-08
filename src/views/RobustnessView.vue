@@ -1,3 +1,1 @@
-<template>
-  Robustness
-</template>
+<template>Robustness</template>
