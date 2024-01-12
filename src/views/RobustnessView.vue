@@ -1,40 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RobustnessMode, type EquivClass, type SpecJSON, robustnessService } from '@/api/robustness'
-import { specStore } from '@/stores/default-stores'
+import { toSpecJSON } from '@/api/commons'
+import { RobustnessMode, type EquivClass, robustnessService } from '@/api/robustness'
 import { SpecGroup } from '@/stores/specs'
-
-const sys = ref('')
-const sys2 = ref('')
-const env = ref('')
-const prop = ref('')
-const prop2 = ref('')
-const dev = ref('')
-const selectedRobustness = ref(RobustnessMode.Robustness)
-const minimized = ref(false)
-const expand = ref(false)
-const withDisables = ref(false)
+import { robustnessConfigStore as config } from '@/stores/default-stores'
 
 const requestResults = ref('')
 
-function toSpecJSON(names: string[], group: SpecGroup): SpecJSON[] | undefined {
-  let specJSON = names
-    .map((name) => specStore.getSpec(name, group))
-    .filter((s) => s !== undefined)
-    .map((spec) => ({ type: spec!.type, content: spec!.content }))
-  if (specJSON.length === 0) {
-    return undefined
-  }
-  return specJSON
-}
-
 function submitForm() {
-  const sysList = sys.value.split(';').map((s) => s.trim())
-  const sys2List = sys2.value.split(';').map((s) => s.trim())
-  const envList = env.value.split(';').map((s) => s.trim())
-  const propList = prop.value.split(';').map((s) => s.trim())
-  const prop2List = prop2.value.split(';').map((s) => s.trim())
-  const devList = dev.value.split(';').map((s) => s.trim())
+  const sysList = config.sys.split(';').map((s) => s.trim())
+  const sys2List = config.sys2.split(';').map((s) => s.trim())
+  const envList = config.env.split(';').map((s) => s.trim())
+  const propList = config.prop.split(';').map((s) => s.trim())
+  const prop2List = config.prop2.split(';').map((s) => s.trim())
+  const devList = config.dev.split(';').map((s) => s.trim())
 
   const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
   const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
@@ -55,14 +34,14 @@ function submitForm() {
     devSpecs: toSpecJSON(devList, SpecGroup.Environment),
 
     options: {
-      expand: expand.value,
-      minimized: minimized.value,
-      disables: withDisables.value
+      expand: config.expand,
+      minimized: config.minimized,
+      disables: config.withDisables
     }
   }
 
   let response: Promise<EquivClass[] | string>
-  switch (selectedRobustness.value) {
+  switch (config.mode) {
     case RobustnessMode.Robustness:
       response = robustnessService.computeRobustness(requestJSON)
       handleEquivClassResponse(response as Promise<EquivClass[]>)
@@ -130,10 +109,10 @@ function handleStringResponse(response: Promise<string>) {
     <form @submit.prevent="submitForm">
       <!-- Sys Input -->
       <div class="mb-3 row">
-        <label for="sysInput" class="col-sm-3 col-form-label">System</label>
-        <div class="col-sm-9">
+        <label for="sysInput" class="col-sm-2 col-form-label">System</label>
+        <div class="col-sm-10">
           <input
-            v-model="sys"
+            v-model="config.sys"
             type="text"
             class="form-control"
             id="sysInput"
@@ -143,11 +122,11 @@ function handleStringResponse(response: Promise<string>) {
       </div>
 
       <!-- Sys2 Input -->
-      <div v-if="selectedRobustness === RobustnessMode.CompareSys" class="mb-3 row">
-        <label for="sysInput2" class="col-sm-3 col-form-label">System to compare</label>
-        <div class="col-sm-9">
+      <div v-if="config.mode === RobustnessMode.CompareSys" class="mb-3 row">
+        <label for="sysInput2" class="col-sm-2 col-form-label">System to compare</label>
+        <div class="col-sm-10">
           <input
-            v-model="sys2"
+            v-model="config.sys2"
             type="text"
             class="form-control"
             id="sysInput2"
@@ -158,10 +137,10 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Env Input -->
       <div class="mb-3 row">
-        <label for="envInput" class="col-sm-3 col-form-label">Environment</label>
-        <div class="col-sm-9">
+        <label for="envInput" class="col-sm-2 col-form-label">Environment</label>
+        <div class="col-sm-10">
           <input
-            v-model="env"
+            v-model="config.env"
             type="text"
             class="form-control"
             id="envInput"
@@ -172,10 +151,10 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Prop Input -->
       <div class="mb-3 row">
-        <label for="propInput" class="col-sm-3 col-form-label">Property</label>
-        <div class="col-sm-9">
+        <label for="propInput" class="col-sm-2 col-form-label">Property</label>
+        <div class="col-sm-10">
           <input
-            v-model="prop"
+            v-model="config.prop"
             type="text"
             class="form-control"
             id="propInput"
@@ -185,11 +164,11 @@ function handleStringResponse(response: Promise<string>) {
       </div>
 
       <!-- Prop2 Input -->
-      <div v-if="selectedRobustness === RobustnessMode.CompareProp" class="mb-3 row">
-        <label for="propInput2" class="col-sm-3 col-form-label">Property to compare</label>
-        <div class="col-sm-9">
+      <div v-if="config.mode === RobustnessMode.CompareProp" class="mb-3 row">
+        <label for="propInput2" class="col-sm-2 col-form-label">Property to compare</label>
+        <div class="col-sm-10">
           <input
-            v-model="prop"
+            v-model="config.prop2"
             type="text"
             class="form-control"
             id="propInput2"
@@ -200,10 +179,10 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Dev Input -->
       <div class="mb-3 row">
-        <label for="devInput" class="col-sm-3 col-form-label">Explanation Model</label>
-        <div class="col-sm-9">
+        <label for="devInput" class="col-sm-2 col-form-label">Explanation Model</label>
+        <div class="col-sm-10">
           <input
-            v-model="dev"
+            v-model="config.dev"
             type="text"
             class="form-control"
             id="devInput"
@@ -214,11 +193,11 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Robustness Group -->
       <div class="mb-3 row">
-        <label class="col-sm-3 col-form-label d-block">Robustness</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 col-form-label d-block">Robustness</label>
+        <div class="col-sm-10">
           <div class="btn-group" role="group" aria-label="Robustness Modes">
             <input
-              v-model="selectedRobustness"
+              v-model="config.mode"
               type="radio"
               class="btn-check"
               id="robustness1"
@@ -227,7 +206,7 @@ function handleStringResponse(response: Promise<string>) {
             <label class="btn btn-outline-secondary" for="robustness1">Robustness</label>
 
             <input
-              v-model="selectedRobustness"
+              v-model="config.mode"
               type="radio"
               class="btn-check"
               id="robustness2"
@@ -236,7 +215,7 @@ function handleStringResponse(response: Promise<string>) {
             <label class="btn btn-outline-secondary" for="robustness2">Intolerable</label>
 
             <input
-              v-model="selectedRobustness"
+              v-model="config.mode"
               type="radio"
               class="btn-check"
               id="robustness3"
@@ -245,7 +224,7 @@ function handleStringResponse(response: Promise<string>) {
             <label class="btn btn-outline-secondary" for="robustness3">Compare Systems</label>
 
             <input
-              v-model="selectedRobustness"
+              v-model="config.mode"
               type="radio"
               class="btn-check"
               id="robustness4"
@@ -254,7 +233,7 @@ function handleStringResponse(response: Promise<string>) {
             <label class="btn btn-outline-secondary" for="robustness4">Compare Properties</label>
 
             <input
-              v-model="selectedRobustness"
+              v-model="config.mode"
               type="radio"
               class="btn-check"
               id="robustness5"
@@ -267,16 +246,16 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Options Group -->
       <div class="mb-3 row">
-        <label class="col-sm-3 col-form-label d-block">Options</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 col-form-label d-block">Options</label>
+        <div class="col-sm-10">
           <div class="btn-group" role="group" aria-label="Options">
-            <input v-model="minimized" type="checkbox" class="btn-check" id="option1" />
+            <input v-model="config.minimized" type="checkbox" class="btn-check" id="option1" />
             <label class="btn btn-outline-secondary" for="option1">Minimized</label>
 
-            <input v-model="expand" type="checkbox" class="btn-check" id="option2" />
+            <input v-model="config.expand" type="checkbox" class="btn-check" id="option2" />
             <label class="btn btn-outline-secondary" for="option2">Expand</label>
 
-            <input v-model="withDisables" type="checkbox" class="btn-check" id="option3" />
+            <input v-model="config.withDisables" type="checkbox" class="btn-check" id="option3" />
             <label class="btn btn-outline-secondary" for="option3">With Disables</label>
           </div>
         </div>
@@ -284,7 +263,7 @@ function handleStringResponse(response: Promise<string>) {
 
       <!-- Submit Button -->
       <div class="mb-3 row">
-        <div class="col-sm-9 offset-sm-3">
+        <div class="col-sm-10 offset-sm-2">
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </div>
@@ -292,12 +271,12 @@ function handleStringResponse(response: Promise<string>) {
 
     <!-- Results Textarea -->
     <div class="mb-3">
-      <label for="resultsTextarea" class="form-label">Results</label>
+      <label for="logsTextarea" class="form-label">Logs</label>
       <textarea
         v-model="requestResults"
         class="form-control"
-        id="resultsTextarea"
-        rows="20"
+        id="logsTextarea"
+        rows="10"
         readonly
       ></textarea>
     </div>

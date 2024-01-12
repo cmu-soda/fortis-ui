@@ -1,3 +1,5 @@
+import type { SpecJSON } from './commons'
+
 export enum RobustnessMode {
   Robustness,
   Intolerable,
@@ -11,11 +13,6 @@ export type EquivClass = RepWithExplain[]
 export interface RepWithExplain {
   rep: { word: string; deadlock: boolean }
   explanation?: string
-}
-
-export interface SpecJSON {
-  type: string
-  content: string
 }
 
 export interface RequestJSON {
