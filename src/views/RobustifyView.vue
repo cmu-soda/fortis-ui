@@ -24,9 +24,9 @@ function toEvents(events: string): string[] {
 }
 
 function submitForm() {
-  const sysList = config.sys.split(';').map((s) => s.trim())
-  const envList = config.env.split(';').map((s) => s.trim())
-  const propList = config.prop.split(';').map((s) => s.trim())
+  const sysList = config.sys.split(',').map((s) => s.trim())
+  const envList = config.env.split(',').map((s) => s.trim())
+  const propList = config.prop.split(',').map((s) => s.trim())
 
   const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
   const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
@@ -42,7 +42,7 @@ function submitForm() {
     envSpecs,
     propSpecs,
     options: {
-      progress: config.progress.split(';').map((s) => s.trim()),
+      progress: config.progress.split(',').map((s) => s.trim()),
       preferredBeh: {
         P3: toTraces(config.preferredBeh.P3),
         P2: toTraces(config.preferredBeh.P2),
@@ -96,7 +96,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             type="text"
             class="form-control"
             id="sysInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             type="text"
             class="form-control"
             id="envInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -124,7 +124,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             type="text"
             class="form-control"
             id="propInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             type="text"
             class="form-control"
             id="progressInput"
-            placeholder="Enter events separated by ;"
+            placeholder="Enter events separated by ,"
           />
         </div>
       </div>

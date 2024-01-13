@@ -8,12 +8,12 @@ import { robustnessConfigStore as config } from '@/stores/default-stores'
 const requestResults = ref('')
 
 function submitForm() {
-  const sysList = config.sys.split(';').map((s) => s.trim())
-  const sys2List = config.sys2.split(';').map((s) => s.trim())
-  const envList = config.env.split(';').map((s) => s.trim())
-  const propList = config.prop.split(';').map((s) => s.trim())
-  const prop2List = config.prop2.split(';').map((s) => s.trim())
-  const devList = config.dev.split(';').map((s) => s.trim())
+  const sysList = config.sys.split(',').map((s) => s.trim())
+  const sys2List = config.sys2.split(',').map((s) => s.trim())
+  const envList = config.env.split(',').map((s) => s.trim())
+  const propList = config.prop.split(',').map((s) => s.trim())
+  const prop2List = config.prop2.split(',').map((s) => s.trim())
+  const devList = config.dev.split(',').map((s) => s.trim())
 
   const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
   const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
@@ -116,7 +116,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="sysInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -130,7 +130,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="sysInput2"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -144,7 +144,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="envInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -158,7 +158,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="propInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -172,7 +172,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="propInput2"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
@@ -186,7 +186,7 @@ function handleStringResponse(response: Promise<string>) {
             type="text"
             class="form-control"
             id="devInput"
-            placeholder="Enter names separated by ;"
+            placeholder="Enter names separated by ,"
           />
         </div>
       </div>
