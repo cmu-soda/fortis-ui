@@ -2,7 +2,12 @@
 import { ref } from 'vue'
 import { toSpecJSON } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
-import { robustificationService, Algorithm, type RequestJSON, type RobustificationResult } from '@/api/robustify'
+import {
+  robustificationService,
+  Algorithm,
+  type RequestJSON,
+  type RobustificationResult
+} from '@/api/robustify'
 import { robustifyConfigStore as config } from '@/stores/default-stores'
 
 const requestResults = ref('')
@@ -395,12 +400,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="my-2 row">
             <label class="col-sm-1 col-form-label">Model</label>
             <div class="col">
-              <textarea
-                :value="s.model"
-                rows="10"
-                class="form-control"
-                readonly
-              />
+              <textarea :value="s.model" rows="10" class="form-control" readonly />
             </div>
           </div>
 
@@ -419,30 +419,20 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="my-2 row">
             <label class="col-sm-1 col-form-label">Controllable</label>
             <div class="col">
-              <input
-                :value="s.controllable.join(', ')"
-                type="text"
-                class="form-control"
-                readonly
-              />
+              <input :value="s.controllable.join(', ')" type="text" class="form-control" readonly />
             </div>
           </div>
 
           <div class="my-2 row">
             <label class="col-sm-1 col-form-label">Observable</label>
             <div class="col">
-              <input
-                :value="s.observable.join(', ')"
-                type="text"
-                class="form-control"
-                readonly
-              />
+              <input :value="s.observable.join(', ')" type="text" class="form-control" readonly />
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+
     <div class="mb-3">
       <label for="logsTextarea" class="form-label">Logs</label>
       <textarea

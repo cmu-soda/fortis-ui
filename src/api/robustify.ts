@@ -29,7 +29,7 @@ export interface RequestJSON {
     observable: PrioritizedEventsJSON
     algorithm: Algorithm
     maxIter: number
-  },
+  }
   outputFormat: string
 }
 

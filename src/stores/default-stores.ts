@@ -9,40 +9,40 @@ import { RobustnessMode } from '@/api/robustness'
 export const specStore: SpecStore = reactive(mockSpecStore)
 
 export const robustifyConfigStore: RobustifyConfig = reactive({
-    sys: '',
-    env: '',
-    prop: '',
-    progress: '',
-    preferredBeh: {
-        P1: '',
-        P2: '',
-        P3: ''
-    },
-    controllable: {
-        P0: '',
-        P1: '',
-        P2: '',
-        P3: ''
-    },
-    observable: {
-        P0: '',
-        P1: '',
-        P2: '',
-        P3: ''
-    },
-    algorithm: Algorithm.Fast,
-    maxIter: 1
+  sys: '',
+  env: '',
+  prop: '',
+  progress: '',
+  preferredBeh: {
+    P1: '',
+    P2: '',
+    P3: ''
+  },
+  controllable: {
+    P0: '',
+    P1: '',
+    P2: '',
+    P3: ''
+  },
+  observable: {
+    P0: '',
+    P1: '',
+    P2: '',
+    P3: ''
+  },
+  algorithm: Algorithm.Fast,
+  maxIter: 1
 })
 
 export const robustnessConfigStore: RobustnessConfig = reactive({
-    sys: '',
-    sys2: '',
-    env: '',
-    prop: '',
-    prop2: '',
-    dev: '',
-    mode: RobustnessMode.Robustness,
-    minimized: true,
-    expand: false,
-    withDisables: false
+  sys: '',
+  sys2: '',
+  env: '',
+  prop: '',
+  prop2: '',
+  dev: '',
+  mode: RobustnessMode.Robustness,
+  minimized: true,
+  expand: false,
+  withDisables: false
 })
