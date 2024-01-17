@@ -87,7 +87,7 @@ function handleEquivClassResponse(response: Promise<EquivClass[]>) {
     })
     .catch((error) => {
       console.error('Error:', error)
-      requestResults.value = 'An error occurred while processing the request.'
+      requestResults.value = 'An error occurred. Please check the console for more details.'
     })
 }
 
@@ -99,7 +99,7 @@ function handleStringResponse(response: Promise<string>) {
     })
     .catch((error) => {
       console.error('Error:', error)
-      requestResults.value = 'An error occurred while processing the request.'
+      requestResults.value = 'An error occurred. Please check the console for more details.'
     })
 }
 </script>

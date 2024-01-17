@@ -35,6 +35,14 @@ import { RouterLink } from 'vue-router'
               >Robustification</RouterLink
             >
           </li>
+          <li class="nav-item">
+            <RouterLink
+              class="nav-link"
+              :class="$route.name === 'weakening' ? 'active' : ''"
+              to="/weakening"
+              >Weakening</RouterLink
+            >
+          </li>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown

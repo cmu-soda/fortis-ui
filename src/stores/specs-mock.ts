@@ -39,6 +39,74 @@ mockSpecStore.addSpec(
   SpecGroup.System
 )
 
+const sys2 = `INTERFACE = (x -> CONFIRM | e -> CONFIRM),
+CONFIRM = (up -> INTERFACE | enter -> FIRE),
+FIRE = (up -> CONFIRM | b -> enter -> INTERFACE).
+
+const NotSet = 0
+const Xray = 1
+const EBeam = 2
+range BeamState = NotSet .. EBeam
+
+const ToXray = 3
+const ToEBeam = 4
+range BeamSwitch = ToXray .. ToEBeam
+
+BEAM = BEAM[NotSet],
+BEAM[mode:BeamState] = (
+    when (mode == NotSet) x -> set_xray -> BEAM[Xray]
+    |
+    when (mode == NotSet) e -> set_ebeam -> BEAM[EBeam]
+    |
+    // Xray mode
+    when (mode == Xray) x -> BEAM[Xray]
+    |
+    when (mode == Xray) e -> BEAM_SWITCH[ToEBeam]
+    |
+    when (mode == Xray) b -> fire_xray -> reset -> BEAM
+    |
+    // EBeam mode
+    when (mode == EBeam) e -> BEAM[EBeam]
+    |
+    when (mode == EBeam) x -> BEAM_SWITCH[ToXray]
+    |
+    when (mode == EBeam) b -> fire_ebeam -> reset -> BEAM
+),
+BEAM_SWITCH[switch:BeamSwitch] = (
+    // EBeam to Xray
+    when (switch == ToXray) x -> BEAM_SWITCH[ToXray]
+    |
+    when (switch == ToXray) e -> BEAM[EBeam]
+    |
+    when (switch == ToXray) b -> fire_ebeam -> reset -> BEAM
+    |
+    when (switch == ToXray) set_xray -> BEAM[Xray]
+    |
+    // Xray to EBeam
+    when (switch == ToEBeam) e -> BEAM_SWITCH[ToEBeam]
+    |
+    when (switch == ToEBeam) x -> BEAM[Xray]
+    |
+    when (switch == ToEBeam) b -> fire_xray -> reset -> BEAM
+    |
+    when (switch == ToEBeam) set_ebeam -> BEAM[EBeam]
+).
+
+SPREADER = (e -> OUTPLACE | x -> SPREADER),
+OUTPLACE = (e -> OUTPLACE | x -> SPREADER).
+
+||SYS = (INTERFACE || BEAM || SPREADER).
+`
+
+mockSpecStore.addSpec(
+  {
+    type: SpecType.FSP,
+    name: 'sys2.lts',
+    content: sys2
+  },
+  SpecGroup.System
+)
+
 const env0 = `ENV = (x -> ENV_1 | e -> ENV_1),
 ENV_1 = (enter -> ENV_2),
 ENV_2 = (b -> enter -> ENV)+{up}.        
@@ -115,6 +183,23 @@ mockSpecStore.addSpec(
     type: SpecType.FSP,
     name: 'p.lts',
     content: p
+  },
+  SpecGroup.Property
+)
+
+const p2 = `fluent Xray = <set_xray, {set_ebeam, reset}>
+fluent EBeam = <set_ebeam, {set_xray, reset}>
+fluent InPlace = <x, e> initially 1
+fluent Fired = <{fire_xray, fire_ebeam}, reset>
+
+assert OVER_DOSE = [](Xray -> InPlace)
+`
+
+mockSpecStore.addSpec(
+  {
+    type: SpecType.FLTL,
+    name: 'p2.lts',
+    content: p2
   },
   SpecGroup.Property
 )

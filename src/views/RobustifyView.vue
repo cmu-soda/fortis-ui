@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toSpecJSON } from '@/api/commons'
+import { toSpecJSON, toTraces, toEvents } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import {
   robustificationService,
@@ -11,22 +11,6 @@ import {
 import { robustifyConfigStore as config } from '@/stores/default-stores'
 
 const requestResults = ref('')
-const results = ref<RobustificationResult[]>([])
-
-function toTraces(traces: string): string[][] {
-  return traces
-    .split(';')
-    .map((s) => s.trim())
-    .filter((s) => s !== '')
-    .map((s) => s.split(',').map((e) => e.trim()))
-}
-
-function toEvents(events: string): string[] {
-  return events
-    .split(',')
-    .map((s) => s.trim())
-    .filter((s) => s !== '')
-}
 
 function submitForm() {
   const sysList = config.sys.split(',').map((s) => s.trim())
@@ -71,8 +55,6 @@ function submitForm() {
     outputFormat: 'FSP'
   }
 
-  console.log(requestJSON)
-
   const response = robustificationService.robustify(requestJSON)
   handleResponse(response)
 }
@@ -80,11 +62,11 @@ function submitForm() {
 function handleResponse(response: Promise<RobustificationResult[]>) {
   response
     .then((data) => {
-      results.value = data
+      config.solutions = data
     })
     .catch((error) => {
       console.error('Error:', error)
-      requestResults.value = 'An error occurred while processing the request.'
+      requestResults.value = 'An error occurred. Please check the console for more details.'
     })
 }
 </script>
@@ -377,7 +359,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
       <label for="solutions" class="form-label">Solutions</label>
       <!-- A tab list of all the robustification results -->
       <ul class="nav nav-tabs" role="tablist">
-        <li v-for="(_, i) of results" :key="i" class="nav-item" role="presentation">
+        <li v-for="(_, i) of config.solutions" :key="i" class="nav-item" role="presentation">
           <button
             class="nav-link"
             data-bs-toggle="tab"
@@ -391,7 +373,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
       </ul>
       <div class="tab-content">
         <div
-          v-for="(s, i) of results"
+          v-for="(s, i) of config.solutions"
           :key="i"
           :id="`solution-${i}`"
           class="tab-pane"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { SpecGroup } from '@/stores/specs'
 import { specStore } from '@/stores/default-stores'
 import FileList from './FileList.vue'
@@ -8,6 +9,8 @@ import FileToolBar from './FileToolBar.vue'
 const sysSelectedIdx = ref(-1)
 const envSelectedIdx = ref(-1)
 const propSelectedIdx = ref(-1)
+const router = useRouter()
+const route = useRoute()
 
 function onSelected(idx: number, group: SpecGroup) {
   sysSelectedIdx.value = -1
@@ -24,6 +27,10 @@ function onSelected(idx: number, group: SpecGroup) {
     case SpecGroup.Property:
       propSelectedIdx.value = idx
       break
+  }
+
+  if (route.name !== 'editor') {
+    router.push({ name: 'editor' })
   }
 }
 </script>

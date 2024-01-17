@@ -16,3 +16,18 @@ export function toSpecJSON(names: string[], group: SpecGroup): SpecJSON[] | unde
   }
   return specJSON
 }
+
+export function toTraces(traces: string): string[][] {
+  return traces
+    .split(';')
+    .map((s) => s.trim())
+    .filter((s) => s !== '')
+    .map((s) => s.split(',').map((e) => e.trim()))
+}
+
+export function toEvents(events: string): string[] {
+  return events
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => s !== '')
+}

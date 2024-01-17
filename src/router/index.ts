@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import EditorView from '../views/EditorView.vue'
 import RobustnessView from '../views/RobustnessView.vue'
 import RobustifyView from '../views/RobustifyView.vue'
+import WeakeningView from '@/views/WeakeningView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/robustify',
       name: 'robustify',
       component: RobustifyView
+    },
+    {
+      path: '/weakening',
+      name: 'weakening',
+      component: WeakeningView
     }
   ]
 })

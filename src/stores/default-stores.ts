@@ -5,6 +5,7 @@ import { Algorithm } from '@/api/robustify'
 import type { RobustifyConfig } from './robustify-config'
 import type { RobustnessConfig } from './robustness-config'
 import { RobustnessMode } from '@/api/robustness'
+import { WeakeningMode, type WeakeningConfig } from './weakening-config'
 
 export const specStore: SpecStore = reactive(mockSpecStore)
 
@@ -31,7 +32,8 @@ export const robustifyConfigStore: RobustifyConfig = reactive({
     P3: ''
   },
   algorithm: Algorithm.Fast,
-  maxIter: 1
+  maxIter: 1,
+  solutions: []
 })
 
 export const robustnessConfigStore: RobustnessConfig = reactive({
@@ -45,4 +47,14 @@ export const robustnessConfigStore: RobustnessConfig = reactive({
   minimized: true,
   expand: false,
   withDisables: false
+})
+
+export const weakeningConfigStore: WeakeningConfig = reactive({
+  sys: '',
+  env: '',
+  prop: '',
+  mode: WeakeningMode.Trace,
+  progress: '',
+  trace: '',
+  inputs: ''
 })

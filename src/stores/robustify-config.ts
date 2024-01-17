@@ -1,4 +1,4 @@
-import type { Algorithm } from '@/api/robustify'
+import type { Algorithm, RobustificationResult } from '@/api/robustify'
 
 export interface RobustifyConfig {
   sys: string
@@ -24,4 +24,5 @@ export interface RobustifyConfig {
   }
   algorithm: Algorithm
   maxIter: number
+  solutions: RobustificationResult[]
 }
