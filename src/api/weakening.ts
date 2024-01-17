@@ -34,7 +34,8 @@ export const weakeningService: WeakeningService = {
       body: JSON.stringify(req)
     })
     if (!response.ok) {
-      throw new Error('Network response was not ok')
+      const content = await response.text()
+      throw new Error(content)
     }
     return (await response.json()) as string[][]
   },
@@ -48,7 +49,8 @@ export const weakeningService: WeakeningService = {
       body: JSON.stringify(req)
     })
     if (!response.ok) {
-      throw new Error('Network response was not ok')
+      const content = await response.text()
+      throw new Error(content)
     }
     return (await response.json()) as string[][]
   },
@@ -62,7 +64,8 @@ export const weakeningService: WeakeningService = {
       body: JSON.stringify(req)
     })
     if (!response.ok) {
-      throw new Error('Network response was not ok')
+      const content = await response.text()
+      throw new Error(content)
     }
     return (await response.json()) as string[]
   }

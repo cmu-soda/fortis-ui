@@ -13,6 +13,8 @@ import { robustifyConfigStore as config } from '@/stores/default-stores'
 const requestResults = ref('')
 
 function submitForm() {
+  requestResults.value = ''
+
   const sysList = config.sys.split(',').map((s) => s.trim())
   const envList = config.env.split(',').map((s) => s.trim())
   const propList = config.prop.split(',').map((s) => s.trim())
@@ -65,8 +67,8 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
       config.solutions = data
     })
     .catch((error) => {
-      console.error('Error:', error)
-      requestResults.value = 'An error occurred. Please check the console for more details.'
+      config.solutions = []
+      requestResults.value = error.toString()
     })
 }
 </script>

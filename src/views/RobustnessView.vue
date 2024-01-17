@@ -8,6 +8,8 @@ import { robustnessConfigStore as config } from '@/stores/default-stores'
 const requestResults = ref('')
 
 function submitForm() {
+  requestResults.value = ''
+
   const sysList = config.sys.split(',').map((s) => s.trim())
   const sys2List = config.sys2.split(',').map((s) => s.trim())
   const envList = config.env.split(',').map((s) => s.trim())
@@ -86,8 +88,7 @@ function handleEquivClassResponse(response: Promise<EquivClass[]>) {
       requestResults.value = resultString
     })
     .catch((error) => {
-      console.error('Error:', error)
-      requestResults.value = 'An error occurred. Please check the console for more details.'
+      requestResults.value = error.toString()
     })
 }
 
@@ -98,8 +99,7 @@ function handleStringResponse(response: Promise<string>) {
       requestResults.value = data
     })
     .catch((error) => {
-      console.error('Error:', error)
-      requestResults.value = 'An error occurred. Please check the console for more details.'
+      requestResults.value = error.toString()
     })
 }
 </script>
