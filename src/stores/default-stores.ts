@@ -46,7 +46,8 @@ export const robustnessConfigStore: RobustnessConfig = reactive({
   mode: RobustnessMode.Robustness,
   minimized: true,
   expand: false,
-  withDisables: false
+  withDisables: false,
+  results: ''
 })
 
 export const weakeningConfigStore: WeakeningConfig = reactive({
@@ -56,7 +57,10 @@ export const weakeningConfigStore: WeakeningConfig = reactive({
   mode: WeakeningMode.Trace,
   progress: '',
   trace: '',
-  inputs: ''
+  inputs: '',
+  exampleTraces: [],
+  exampleTracesPositive: [],
+  solutions: ''
 })
 
 export const loggingStore = ref('')

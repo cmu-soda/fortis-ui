@@ -11,4 +11,7 @@ export interface WeakeningConfig {
   progress: string
   trace: string
   inputs: string
+  exampleTraces: string[]
+  exampleTracesPositive: boolean[]
+  solutions: string
 }

@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WeakeningMode } from '@/stores/weakening-config'
-import { weakeningConfigStore as config } from '@/stores/default-stores'
+import { weakeningConfigStore as config, loggingStore } from '@/stores/default-stores'
 import { toSpecJSON, toEvents } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import { weakeningService } from '@/api/weakening'
+import RequestAlert from '@/components/RequestAlert.vue'
 
-const exampleTraces = ref<string[]>([])
-const exampleTracesPositive = ref<boolean[]>([])
 const requestResults = ref('')
+const isCompleted = ref(false)
+const isSuccess = ref(false)
+
+function resetAlert() {
+  loggingStore.value += '================================================================================\n'
+  
+  requestResults.value = ''
+  isCompleted.value = false
+  isSuccess.value = false
+}
 
 function generateExamples() {
-  requestResults.value = ''
+  resetAlert()
+  config.solutions = ''
 
   const sysList = config.sys.split(',').map((s) => s.trim())
   const envList = config.env.split(',').map((s) => s.trim())
@@ -23,6 +33,7 @@ function generateExamples() {
 
   if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid system, environment, and property.'
+    isCompleted.value = true
     return
   }
 
@@ -53,31 +64,38 @@ function parseFluents(prop: string): string[] {
 function handleExampleResponse(response: Promise<string[][]>) {
   response
     .then((examples) => {
-      exampleTraces.value = examples.map((e) => e.join(', '))
-      exampleTracesPositive.value = examples.map(() => false)
+      config.exampleTraces = examples.map((e) => e.join(', '))
+      config.exampleTracesPositive = examples.map(() => false)
+      isSuccess.value = true
+      requestResults.value = 'Successfully generated example traces.'
     })
     .catch((error) => {
-      exampleTraces.value = []
-      exampleTracesPositive.value = []
+      config.exampleTraces = []
+      config.exampleTracesPositive = []
       requestResults.value = error.toString()
+    })
+    .finally(() => {
+      isCompleted.value = true
     })
 }
 
 function weaken() {
-  requestResults.value = ''
+  resetAlert()
+  config.solutions = ''
 
   const prop = config.prop.trim()
   const propSpecs = toSpecJSON([prop], SpecGroup.Property)
 
   if (propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid property.'
+    isCompleted.value = true
     return
   }
 
   const invariant = parseInvariant(propSpecs[0].content)
   const fluents = parseFluents(propSpecs[0].content)
-  const positiveExamples = exampleTraces.value.filter((_, i) => exampleTracesPositive.value[i])
-  const negativeExamples = exampleTraces.value.filter((_, i) => !exampleTracesPositive.value[i])
+  const positiveExamples = config.exampleTraces.filter((_, i) => config.exampleTracesPositive[i])
+  const negativeExamples = config.exampleTraces.filter((_, i) => !config.exampleTracesPositive[i])
 
   const requestJSON = {
     invariant,
@@ -95,7 +113,7 @@ function parseInvariant(prop: string): string {
   if (matched !== null) {
     return matched[1]
   } else {
-    requestResults.value = 'Please enter a valid safety property.'
+    config.solutions = 'Please enter a valid safety property.'
     throw new Error('Invalid safety property.')
   }
 }
@@ -103,16 +121,28 @@ function parseInvariant(prop: string): string {
 function handleWeakeningResponse(response: Promise<string[]>) {
   response
     .then((weakened) => {
-      requestResults.value = weakened.join('\n')
+      config.solutions = weakened.join('\n')
+      isSuccess.value = true
+      requestResults.value = 'Successfully weakened the safety property.'
     })
     .catch((error) => {
       requestResults.value = error.toString()
+    })
+    .finally(() => {
+      isCompleted.value = true
     })
 }
 </script>
 
 <template>
   <div class="container-fluid py-2 h-100 overflow-y-scroll">
+    <RequestAlert
+      :show="isCompleted"
+      :success="isSuccess"
+      :message="requestResults"
+      @close="() => (isCompleted = false)"
+    />
+
     <form @submit.prevent="generateExamples">
       <!-- Sys input -->
       <div class="mb-3 row">
@@ -239,7 +269,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
         <div class="col-sm-10">
           <ul class="list-group">
             <li
-              v-for="(t, i) of exampleTraces"
+              v-for="(t, i) of config.exampleTraces"
               :key="i"
               class="list-group-item list-group-item-light d-flex"
             >
@@ -248,7 +278,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  v-model="exampleTracesPositive[i]"
+                  v-model="config.exampleTracesPositive[i]"
                 />
                 <label class="form-check-label"><strong>Positive</strong></label>
               </div>
@@ -267,12 +297,12 @@ function handleWeakeningResponse(response: Promise<string[]>) {
 
     <!-- Results -->
     <div class="mb-3 row">
-      <label for="resultsTextarea" class="col-sm-2 col-form-label">Results</label>
+      <label for="solutionsTextarea" class="col-sm-2 col-form-label">Solutions</label>
       <div class="col-sm-10">
         <textarea
-          v-model="requestResults"
+          v-model="config.solutions"
           class="form-control"
-          id="resultsTextarea"
+          id="solutionsTextarea"
           rows="5"
           readonly
         ></textarea>

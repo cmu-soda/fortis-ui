@@ -4,7 +4,9 @@ import type { Spec } from '@/stores/specs'
 import { specStore } from '@/stores/default-stores'
 import { eventEmitter } from '@/stores/events'
 
-const content = ref(specStore.selected?.content ?? '')
+const content = ref(
+  specStore.selected ? specStore.selected.cached ?? specStore.selected.content : ''
+)
 
 watch(
   () => specStore.selected,

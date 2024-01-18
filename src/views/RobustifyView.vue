@@ -8,11 +8,18 @@ import {
   type RequestJSON,
   type RobustificationResult
 } from '@/api/robustify'
-import { robustifyConfigStore as config } from '@/stores/default-stores'
+import { robustifyConfigStore as config, loggingStore } from '@/stores/default-stores'
+import RequestAlert from '@/components/RequestAlert.vue'
 
 const requestResults = ref('')
+const isCompleted = ref(false)
+const isSuccess = ref(false)
 
 function submitForm() {
+  loggingStore.value += '================================================================================\n'
+
+  isCompleted.value = false
+  isSuccess.value = false
   requestResults.value = ''
 
   const sysList = config.sys.split(',').map((s) => s.trim())
@@ -25,6 +32,7 @@ function submitForm() {
 
   if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid system, environment, and property.'
+    isCompleted.value = true
     return
   }
 
@@ -65,16 +73,28 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
   response
     .then((data) => {
       config.solutions = data
+      isSuccess.value = true
+      requestResults.value = 'Robustification process is completed!'
     })
     .catch((error) => {
       config.solutions = []
       requestResults.value = error.toString()
+    })
+    .finally(() => {
+      isCompleted.value = true
     })
 }
 </script>
 
 <template>
   <div class="container-fluid py-2 h-100 overflow-y-scroll">
+    <RequestAlert
+      :show="isCompleted"
+      :success="isSuccess"
+      :message="requestResults"
+      @close="() => (isCompleted = false)"
+    />
+
     <form @submit.prevent="submitForm">
       <!-- Sys Input -->
       <div class="mb-3 row">
@@ -417,7 +437,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
       </div>
     </div>
 
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <label for="resultTextarea" class="form-label">Result</label>
       <textarea
         v-model="requestResults"
@@ -426,6 +446,6 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
         rows="3"
         readonly
       ></textarea>
-    </div>
+    </div> -->
   </div>
 </template>

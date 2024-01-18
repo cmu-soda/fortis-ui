@@ -11,4 +11,5 @@ export interface RobustnessConfig {
   minimized: boolean
   expand: boolean
   withDisables: boolean
+  results: string
 }

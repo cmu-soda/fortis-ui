@@ -3,12 +3,20 @@ import { ref } from 'vue'
 import { toSpecJSON } from '@/api/commons'
 import { RobustnessMode, type EquivClass, robustnessService } from '@/api/robustness'
 import { SpecGroup } from '@/stores/specs'
-import { robustnessConfigStore as config } from '@/stores/default-stores'
+import { robustnessConfigStore as config, loggingStore } from '@/stores/default-stores'
+import RequestAlert from '@/components/RequestAlert.vue'
 
 const requestResults = ref('')
+const isCompleted = ref(false)
+const isSuccess = ref(false)
 
 function submitForm() {
+  loggingStore.value += '================================================================================\n'
+  
   requestResults.value = ''
+  isCompleted.value = false
+  isSuccess.value = false
+  config.results = ''
 
   const sysList = config.sys.split(',').map((s) => s.trim())
   const sys2List = config.sys2.split(',').map((s) => s.trim())
@@ -23,6 +31,7 @@ function submitForm() {
 
   if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid system, environment, and property.'
+    isCompleted.value = true
     return
   }
 
@@ -85,10 +94,15 @@ function handleEquivClassResponse(response: Promise<EquivClass[]>) {
       if (resultString === '') {
         resultString = 'No deviations found.'
       }
-      requestResults.value = resultString
+      config.results = resultString
+      isSuccess.value = true
+      requestResults.value = 'Successfully computed robustness.'
     })
     .catch((error) => {
       requestResults.value = error.toString()
+    })
+    .finally(() => {
+      isCompleted.value = true
     })
 }
 
@@ -96,16 +110,28 @@ function handleStringResponse(response: Promise<string>) {
   response
     .then((data) => {
       // Handle the response data
-      requestResults.value = data
+      config.results = data
+      isSuccess.value = true
+      requestResults.value = 'Successfully computed robustness.'
     })
     .catch((error) => {
       requestResults.value = error.toString()
+    })
+    .finally(() => {
+      isCompleted.value = true
     })
 }
 </script>
 
 <template>
   <div class="container-fluid py-2 h-100 overflow-y-scroll">
+    <RequestAlert
+      :show="isCompleted"
+      :success="isSuccess"
+      :message="requestResults"
+      @close="() => (isCompleted = false)"
+    />
+
     <form @submit.prevent="submitForm">
       <!-- Sys Input -->
       <div class="mb-3 row">
@@ -273,7 +299,7 @@ function handleStringResponse(response: Promise<string>) {
     <div class="mb-3">
       <label for="resultTextarea" class="form-label">Result</label>
       <textarea
-        v-model="requestResults"
+        v-model="config.results"
         class="form-control"
         id="resultTextarea"
         rows="10"

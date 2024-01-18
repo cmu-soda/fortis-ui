@@ -30,7 +30,7 @@ function removeSpec(name: string) {
       v-for="(s, i) in specs"
       :key="s.name"
       type="button"
-      class="list-group-item list-group-item-action py-1 d-flex justify-content-between align-items-start"
+      class="list-group-item list-group-item-action py-1 d-flex justify-content-between align-items-start pe-0"
       :class="{ active: i === props.selectedIdx }"
       @click="selectSpec(s.name, i)"
     >
