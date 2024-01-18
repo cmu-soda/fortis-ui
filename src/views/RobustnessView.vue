@@ -271,11 +271,11 @@ function handleStringResponse(response: Promise<string>) {
 
     <!-- Results Textarea -->
     <div class="mb-3">
-      <label for="logsTextarea" class="form-label">Logs</label>
+      <label for="resultTextarea" class="form-label">Result</label>
       <textarea
         v-model="requestResults"
         class="form-control"
-        id="logsTextarea"
+        id="resultTextarea"
         rows="10"
         readonly
       ></textarea>

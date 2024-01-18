@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { SimpleSpecStore, type SpecStore } from './specs'
 import { mockSpecStore } from './specs-mock'
 import { Algorithm } from '@/api/robustify'
@@ -58,3 +58,5 @@ export const weakeningConfigStore: WeakeningConfig = reactive({
   trace: '',
   inputs: ''
 })
+
+export const loggingStore = ref('')
