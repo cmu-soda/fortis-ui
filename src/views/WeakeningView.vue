@@ -8,15 +8,17 @@ import { weakeningService } from '@/api/weakening'
 import RequestAlert from '@/components/RequestAlert.vue'
 
 const requestResults = ref('')
-const isCompleted = ref(false)
+const isCompleted = ref(true)
 const isSuccess = ref(false)
+const showAlert = ref(false)
 
 function resetAlert() {
-  loggingStore.value += '================================================================================\n'
+  loggingStore.value += '\n================================================================================\n'
   
   requestResults.value = ''
   isCompleted.value = false
   isSuccess.value = false
+  showAlert.value = false
 }
 
 function generateExamples() {
@@ -33,7 +35,7 @@ function generateExamples() {
 
   if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid system, environment, and property.'
-    isCompleted.value = true
+    showAlert.value = isCompleted.value = true
     return
   }
 
@@ -75,7 +77,7 @@ function handleExampleResponse(response: Promise<string[][]>) {
       requestResults.value = error.toString()
     })
     .finally(() => {
-      isCompleted.value = true
+      showAlert.value = isCompleted.value = true
     })
 }
 
@@ -88,7 +90,7 @@ function weaken() {
 
   if (propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid property.'
-    isCompleted.value = true
+    showAlert.value = isCompleted.value = true
     return
   }
 
@@ -129,7 +131,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       requestResults.value = error.toString()
     })
     .finally(() => {
-      isCompleted.value = true
+      showAlert.value = isCompleted.value = true
     })
 }
 </script>
@@ -137,10 +139,10 @@ function handleWeakeningResponse(response: Promise<string[]>) {
 <template>
   <div class="container-fluid py-2 h-100 overflow-y-scroll">
     <RequestAlert
-      :show="isCompleted"
+      :show="showAlert"
       :success="isSuccess"
       :message="requestResults"
-      @close="() => (isCompleted = false)"
+      @close="() => (showAlert = false)"
     />
 
     <form @submit.prevent="generateExamples">
@@ -257,7 +259,11 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-sm-10 offset-sm-2">
-          <button type="submit" class="btn btn-primary">Generate Example Traces</button>
+          <button v-if="isCompleted" type="submit" class="btn btn-primary">Generate Example Traces</button>
+          <button v-else type="submit" class="btn btn-primary" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
         </div>
       </div>
     </form>
@@ -290,7 +296,11 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-sm-10 offset-sm-2">
-          <button type="submit" class="btn btn-primary">Weaken</button>
+          <button v-if="isCompleted" type="submit" class="btn btn-primary">Weaken</button>
+          <button v-else type="submit" class="btn btn-primary" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
         </div>
       </div>
     </form>

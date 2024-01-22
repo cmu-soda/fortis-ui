@@ -7,16 +7,23 @@ import { robustnessConfigStore as config, loggingStore } from '@/stores/default-
 import RequestAlert from '@/components/RequestAlert.vue'
 
 const requestResults = ref('')
-const isCompleted = ref(false)
+const isCompleted = ref(true)
 const isSuccess = ref(false)
+const showAlert = ref(false)
 
-function submitForm() {
-  loggingStore.value += '================================================================================\n'
+function resetAlert() {
+  loggingStore.value += '\n================================================================================\n'
   
   requestResults.value = ''
   isCompleted.value = false
   isSuccess.value = false
+  showAlert.value = false
+
   config.results = ''
+}
+
+function submitForm() {
+  resetAlert()
 
   const sysList = config.sys.split(',').map((s) => s.trim())
   const sys2List = config.sys2.split(',').map((s) => s.trim())
@@ -31,7 +38,7 @@ function submitForm() {
 
   if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid system, environment, and property.'
-    isCompleted.value = true
+    showAlert.value = isCompleted.value = true
     return
   }
 
@@ -102,7 +109,7 @@ function handleEquivClassResponse(response: Promise<EquivClass[]>) {
       requestResults.value = error.toString()
     })
     .finally(() => {
-      isCompleted.value = true
+      showAlert.value = isCompleted.value = true
     })
 }
 
@@ -118,7 +125,7 @@ function handleStringResponse(response: Promise<string>) {
       requestResults.value = error.toString()
     })
     .finally(() => {
-      isCompleted.value = true
+      showAlert.value = isCompleted.value = true
     })
 }
 </script>
@@ -126,10 +133,10 @@ function handleStringResponse(response: Promise<string>) {
 <template>
   <div class="container-fluid py-2 h-100 overflow-y-scroll">
     <RequestAlert
-      :show="isCompleted"
+      :show="showAlert"
       :success="isSuccess"
       :message="requestResults"
-      @close="() => (isCompleted = false)"
+      @close="() => (showAlert = false)"
     />
 
     <form @submit.prevent="submitForm">
@@ -290,7 +297,11 @@ function handleStringResponse(response: Promise<string>) {
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-sm-10 offset-sm-2">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button v-if="isCompleted" type="submit" class="btn btn-primary">Compute</button>
+          <button v-else type="submit" class="btn btn-primary" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
         </div>
       </div>
     </form>
