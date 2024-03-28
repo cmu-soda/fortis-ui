@@ -21,7 +21,7 @@ import { loggingStore } from '@/stores/default-stores'
       ></button>
     </div>
     <div class="offcanvas-body bg-dark-subtle">
-      <pre class="">{{ loggingStore }}</pre>
+      <pre class="">{{ loggingStore.content }}</pre>
     </div>
   </div>
 </template>

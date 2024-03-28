@@ -10,23 +10,23 @@ import { WeakeningMode, type WeakeningConfig } from './weakening-config'
 export const specStore: SpecStore = reactive(mockSpecStore)
 
 export const robustifyConfigStore: RobustifyConfig = reactive({
-  sys: '',
-  env: '',
-  prop: '',
-  progress: '',
+  sys: 'sys2.lts',
+  env: 'env.lts',
+  prop: 'p2.lts',
+  progress: 'fire_ebeam, fire_xray',
   preferredBeh: {
-    P1: '',
+    P1: 'x, up, e, enter, b;\ne, up, x, enter, b',
     P2: '',
     P3: ''
   },
   controllable: {
-    P0: '',
-    P1: '',
+    P0: 'fire_xray, fire_ebeam, set_xray, set_ebeam',
+    P1: 'x, e, up, enter, b',
     P2: '',
     P3: ''
   },
   observable: {
-    P0: '',
+    P0: 'x, e, up, enter, b, fire_xray, fire_ebeam, set_xray, set_ebeam',
     P1: '',
     P2: '',
     P3: ''
@@ -63,4 +63,13 @@ export const weakeningConfigStore: WeakeningConfig = reactive({
   solutions: ''
 })
 
-export const loggingStore = ref('')
+export const loggingStore = reactive({
+  content: '',
+
+  log(msg: string) {
+    this.content += msg
+    if (this.content.length > 10000) {
+      this.content = this.content.substring(this.content.length - 10000)
+    }
+  },
+})

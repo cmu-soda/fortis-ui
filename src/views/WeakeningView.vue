@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { WeakeningMode } from '@/stores/weakening-config'
 import { weakeningConfigStore as config, loggingStore } from '@/stores/default-stores'
-import { toSpecJSON, toEvents } from '@/api/commons'
+import { toSpecJSON, toEvents, toTraces } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import { weakeningService } from '@/api/weakening'
 import RequestAlert from '@/components/RequestAlert.vue'
@@ -13,7 +13,7 @@ const isSuccess = ref(false)
 const showAlert = ref(false)
 
 function resetAlert() {
-  loggingStore.value += '\n================================================================================\n'
+  loggingStore.log('\n================================================================================\n')
   
   requestResults.value = ''
   isCompleted.value = false
@@ -42,15 +42,32 @@ function generateExamples() {
   const fluents = parseFluents(propSpecs[0].content)
 
   if (config.mode === WeakeningMode.Trace) {
-    const requestJSON = {
-      sysSpecs,
-      envSpecs,
-      fluents,
-      trace: toEvents(config.trace),
-      inputs: toEvents(config.inputs)
+    const responses = []
+    const traces = toTraces(config.trace)
+    let inputs = toEvents(config.inputs)
+
+    if (inputs.length === 0) {
+      const inputsSet = new Set<string>()
+      for (let t of traces) {
+        for (let e of t) {
+          inputsSet.add(e)
+        }
+      }
+      inputs = Array.from(inputsSet)
     }
-    const response = weakeningService.generateExamplesFromTrace(requestJSON)
-    handleExampleResponse(response as Promise<string[][]>)
+
+    for (let t of traces) {
+      const requestJSON = {
+        sysSpecs,
+        envSpecs,
+        fluents,
+        trace: t,
+        inputs
+      }
+      const response = weakeningService.generateExamplesFromTrace(requestJSON)
+      responses.push(response as Promise<string[][]>)
+    }
+    handleExampleResponse(responses)
   }
 }
 
@@ -63,10 +80,10 @@ function parseFluents(prop: string): string[] {
   return fluents
 }
 
-function handleExampleResponse(response: Promise<string[][]>) {
-  response
+function handleExampleResponse(responses: Promise<string[][]>[]) {
+  Promise.all(responses)
     .then((examples) => {
-      config.exampleTraces = examples.map((e) => e.join(', '))
+      config.exampleTraces = examples.flatMap((e) => e.map((t) => t.join(', ')))
       config.exampleTracesPositive = examples.map(() => false)
       isSuccess.value = true
       requestResults.value = 'Successfully generated example traces.'
@@ -189,7 +206,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       </div>
 
       <!-- Weakening mode option group -->
-      <div class="mb-3 row">
+      <!-- <div class="mb-3 row">
         <label class="col-sm-2 col-form-label d-block">Mode</label>
         <div class="col-sm-10">
           <div class="btn-group" role="group" aria-label="Weakening Modes">
@@ -212,7 +229,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
             <label class="btn btn-outline-secondary" for="mode2">Progress</label>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Progress Input -->
       <div v-if="config.mode === WeakeningMode.Progress" class="mb-3 row">
@@ -237,7 +254,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
             type="text"
             class="form-control"
             id="traceInput"
-            placeholder="Enter the observable trace, events separated by ,"
+            placeholder="Enter the observable trace, events separated by ',' and traces separated by ';'"
           />
         </div>
       </div>
@@ -251,7 +268,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
             type="text"
             class="form-control"
             id="traceAlphabetInput"
-            placeholder="Enter the alphabet of the trace, events separated by ,"
+            placeholder="Enter the alphabet of the trace, events separated by ',' Default is all events of the trace."
           />
         </div>
       </div>

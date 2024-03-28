@@ -16,7 +16,7 @@ onMounted(() => {
   stompClient.onConnect = () => {
     console.log('connected to websocket logging')
     stompClient.subscribe('/topic/logs', (message) => {
-      loggingStore.value += message.body
+      loggingStore.log(message.body)
     })
   }
 
