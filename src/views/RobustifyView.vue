@@ -95,7 +95,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
 </script>
 
 <template>
-  <div class="container-fluid py-2 h-100 overflow-y-scroll">
+  <div class="container-fluid py-2 h-100 overflow-y-scroll" style="padding-bottom: 50vh !important;">
     <RequestAlert
       :show="showAlert"
       :success="isSuccess"
