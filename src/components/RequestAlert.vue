@@ -10,7 +10,7 @@ defineProps({
   <div
     v-if="show"
     class="alert alert-success fixed-top d-flex m-2"
-    style="left: 10%; width: 80% !important;"
+    style="left: 10%; width: 80% !important"
     :class="success ? 'alert-success' : 'alert-danger'"
     role="alert"
   >

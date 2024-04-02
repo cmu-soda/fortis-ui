@@ -15,6 +15,7 @@ export interface ExampleGenRequestJSON {
   trace?: string[]
   inputs?: string[]
   fluents: string[]
+  numOfAdditionalExamples: number
 }
 
 export interface WeakeningRequestJSON {

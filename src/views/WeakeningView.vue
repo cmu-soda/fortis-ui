@@ -13,15 +13,17 @@ const isSuccess = ref(false)
 const showAlert = ref(false)
 
 function resetAlert() {
-  loggingStore.log('\n================================================================================\n')
-  
+  loggingStore.log(
+    '\n================================================================================\n'
+  )
+
   requestResults.value = ''
   isCompleted.value = false
   isSuccess.value = false
   showAlert.value = false
 }
 
-function generateExamples() {
+function generateExamples(additional: boolean = false) {
   resetAlert()
   config.solutions = ''
 
@@ -42,7 +44,7 @@ function generateExamples() {
   const fluents = parseFluents(propSpecs[0].content)
 
   if (config.mode === WeakeningMode.Trace) {
-    const responses = []
+    const responses: Promise<string[][]>[] = []
     const traces = toTraces(config.trace)
     let inputs = toEvents(config.inputs)
 
@@ -62,12 +64,13 @@ function generateExamples() {
         envSpecs,
         fluents,
         trace: t,
-        inputs
+        inputs,
+        numOfAdditionalExamples: additional ? config.exampleTraces.length + 1 : 0
       }
       const response = weakeningService.generateExamplesFromTrace(requestJSON)
       responses.push(response as Promise<string[][]>)
     }
-    handleExampleResponse(responses)
+    setTimeout(() => handleExampleResponse(responses), 500)
   }
 }
 
@@ -154,7 +157,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
 </script>
 
 <template>
-  <div class="container-fluid py-2 h-100 overflow-y-scroll" style="padding-bottom: 50vh !important;">
+  <div class="container-fluid py-2 h-100 overflow-y-scroll" style="padding-bottom: 50vh !important">
     <RequestAlert
       :show="showAlert"
       :success="isSuccess"
@@ -162,7 +165,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       @close="() => (showAlert = false)"
     />
 
-    <form @submit.prevent="generateExamples">
+    <form @submit.prevent="() => generateExamples()">
       <!-- Sys input -->
       <div class="mb-3 row">
         <label for="sysInput" class="col-sm-2 col-form-label">System</label>
@@ -276,8 +279,27 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-sm-10 offset-sm-2">
-          <button v-if="isCompleted" type="submit" class="btn btn-primary">Generate Example Traces</button>
+          <button v-if="isCompleted" type="submit" class="btn btn-primary">
+            Generate Example Traces
+          </button>
           <button v-else type="submit" class="btn btn-primary" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
+          <button
+            v-if="isCompleted && config.exampleTraces.length > 0"
+            type="button"
+            class="btn btn-primary ms-2"
+            @click="() => generateExamples(true)"
+          >
+            More Examples
+          </button>
+          <button
+            v-else-if="config.exampleTraces.length > 0"
+            type="submit"
+            class="btn btn-primary ms-2"
+            disabled
+          >
             <div class="spinner-border spinner-border-sm me-2" role="status"></div>
             <span>In progress ...</span>
           </button>
