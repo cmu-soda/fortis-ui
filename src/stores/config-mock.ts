@@ -20,9 +20,9 @@ export const theracRobustifyConfig = {
   sys: 'sys2.lts',
   env: 'env.lts',
   prop: 'p2.lts',
-  progress: 'fire_ebeam, fire_xray',
+  progress: '',
   preferredBeh: {
-    P0: '',
+    P0: 'x, enter, b;\ne, enter, b',
     P1: 'x, up, e, enter, b;\ne, up, x, enter, b',
     P2: '',
     P3: ''

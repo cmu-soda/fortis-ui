@@ -67,4 +67,8 @@ textarea {
   padding-bottom: 80vh;
   resize: none;
 }
+
+textarea:focus {
+  outline: none;
+}
 </style>
