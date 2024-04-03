@@ -13,6 +13,7 @@ interface PrioritizedEventsJSON {
 }
 
 interface PrioritizedBehJSON {
+  P0: string[][]
   P1: string[][]
   P2: string[][]
   P3: string[][]

@@ -15,3 +15,16 @@ export interface WeakeningConfig {
   exampleTracesPositive: boolean[]
   solutions: string
 }
+
+export const emptyWeakeningConfig: WeakeningConfig = {
+  sys: '',
+  env: '',
+  prop: '',
+  mode: WeakeningMode.Trace,
+  progress: '',
+  trace: '',
+  inputs: '',
+  exampleTraces: [],
+  exampleTracesPositive: [],
+  solutions: ''
+}

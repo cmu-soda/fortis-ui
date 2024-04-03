@@ -1,4 +1,4 @@
-import type { RobustnessMode } from '@/api/robustness'
+import { RobustnessMode } from '@/api/robustness'
 
 export interface RobustnessConfig {
   sys: string
@@ -12,4 +12,18 @@ export interface RobustnessConfig {
   expand: boolean
   withDisables: boolean
   results: string
+}
+
+export const emptyRobustnessConfig: RobustnessConfig = {
+  sys: '',
+  sys2: '',
+  env: '',
+  prop: '',
+  prop2: '',
+  dev: '',
+  mode: RobustnessMode.Robustness,
+  minimized: true,
+  expand: false,
+  withDisables: false,
+  results: ''
 }

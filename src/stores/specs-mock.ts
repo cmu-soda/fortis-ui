@@ -1,6 +1,6 @@
 import { SimpleSpecStore, SpecGroup, SpecType, type SpecStore } from './specs'
 
-export const mockSpecStore: SpecStore = new SimpleSpecStore()
+export const theracSpecStore: SpecStore = new SimpleSpecStore()
 
 const sys = `const IntNotSet = 0
 const IntXray = 1
@@ -30,7 +30,7 @@ OUTPLACE = (e -> OUTPLACE | x -> SPREADER).
 ||SYS = (INTERFACE || BEAM || SPREADER).
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'sys.lts',
@@ -98,7 +98,7 @@ OUTPLACE = (e -> OUTPLACE | x -> SPREADER).
 ||SYS = (INTERFACE || BEAM || SPREADER).
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'sys2.lts',
@@ -112,7 +112,7 @@ ENV_1 = (enter -> ENV_2),
 ENV_2 = (b -> enter -> ENV)+{up}.        
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'env0.lts',
@@ -126,7 +126,7 @@ ENV_1 = (enter -> ENV_2 | up -> ENV),
 ENV_2 = (b -> enter -> ENV | up -> ENV_1).        
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'env.lts',
@@ -140,7 +140,7 @@ ENV_1 = (enter -> ENV_2 | commission -> up -> ENV),
 ENV_2 = (b -> enter -> ENV | commission -> up -> ENV_1).
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'dev.lts',
@@ -178,7 +178,7 @@ P[spreader:SpreaderState][power:BeamState] = (
 ).
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
     name: 'p.lts',
@@ -195,7 +195,7 @@ fluent Fired = <{fire_xray, fire_ebeam}, reset>
 assert OVER_DOSE = [](Xray -> InPlace)
 `
 
-mockSpecStore.addSpec(
+theracSpecStore.addSpec(
   {
     type: SpecType.FLTL,
     name: 'p2.lts',
