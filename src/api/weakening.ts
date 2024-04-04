@@ -5,9 +5,11 @@ export interface WeakeningService {
 
   generateExamplesFromProgress(req: ExampleGenRequestJSON): Promise<string[][]>
 
-  weakenSafetyInvariant(req: WeakeningRequestJSON): Promise<string[]>
+  weakenSafetyInvariant(req: WeakeningRequestJSON): Promise<string>
 
-  weakenGR1SafetyInvariant(req: WeakeningRequestJSON): Promise<string[]>
+  weakenGR1SafetyInvariant(req: WeakeningRequestJSON): Promise<string>
+
+  nextSolution(): Promise<string>
 }
 
 export interface ExampleGenRequestJSON {
@@ -59,7 +61,7 @@ export const weakeningService: WeakeningService = {
     return (await response.json()) as string[][]
   },
 
-  weakenSafetyInvariant: async function (req: WeakeningRequestJSON): Promise<string[]> {
+  weakenSafetyInvariant: async function (req: WeakeningRequestJSON): Promise<string> {
     const response = await fetch('http://localhost:8080/api/weakening/weakenSafetyInvariant', {
       method: 'POST',
       headers: {
@@ -71,10 +73,10 @@ export const weakeningService: WeakeningService = {
       const content = await response.text()
       throw new Error(content)
     }
-    return (await response.json()) as string[]
+    return await response.text()
   },
 
-  weakenGR1SafetyInvariant: async function (req: WeakeningRequestJSON): Promise<string[]> {
+  weakenGR1SafetyInvariant: async function (req: WeakeningRequestJSON): Promise<string> {
     const response = await fetch('http://localhost:8080/api/weakening/weakenGR1Invariant', {
       method: 'POST',
       headers: {
@@ -86,6 +88,17 @@ export const weakeningService: WeakeningService = {
       const content = await response.text()
       throw new Error(content)
     }
-    return [await response.text()]
+    return await response.text()
+  },
+
+  nextSolution: async function (): Promise<string> {
+    const response = await fetch('http://localhost:8080/api/weakening/nextSolution', {
+      method: 'POST'
+    })
+    if (!response.ok) {
+      const content = await response.text()
+      throw new Error(content)
+    }
+    return await response.text()
   }
 }

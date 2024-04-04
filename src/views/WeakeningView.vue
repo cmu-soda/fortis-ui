@@ -110,7 +110,7 @@ function simpleWeaken() {
   if (requestJSON === null) return
 
   const response = weakeningService.weakenSafetyInvariant(requestJSON)
-  setTimeout(() => handleWeakeningResponse(response as Promise<string[]>), 500)
+  setTimeout(() => handleWeakeningResponse(response), 500)
 }
 
 function gr1Weaken() {
@@ -122,7 +122,15 @@ function gr1Weaken() {
 
   requestJSON.maxNumOfNode = config.maxNumOfNode
   const response = weakeningService.weakenGR1SafetyInvariant(requestJSON)
-  setTimeout(() => handleWeakeningResponse(response as Promise<string[]>), 500)
+  setTimeout(() => handleWeakeningResponse(response), 500)
+}
+
+function nextSolution() {
+  resetAlert()
+  config.solutions = ''
+
+  const response = weakeningService.nextSolution()
+  setTimeout(() => handleWeakeningResponse(response), 500)
 }
 
 function parseRequestJSON(): WeakeningRequestJSON | null {
@@ -159,10 +167,10 @@ function parseInvariant(prop: string): string {
   }
 }
 
-function handleWeakeningResponse(response: Promise<string[]>) {
+function handleWeakeningResponse(response: Promise<string>) {
   response
     .then((weakened) => {
-      config.solutions = weakened.join('\n')
+      config.solutions = weakened === '' ? 'No solution found' : weakened
       isSuccess.value = true
       requestResults.value = 'Successfully weakened the safety property.'
     })
@@ -363,7 +371,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
           >
             Simple Weaken
           </button>
-          <button v-else type="submit" class="btn btn-primary" disabled>
+          <button v-else type="button" class="btn btn-primary" disabled>
             <div class="spinner-border spinner-border-sm me-2" role="status"></div>
             <span>In progress ...</span>
           </button>
@@ -377,7 +385,25 @@ function handleWeakeningResponse(response: Promise<string[]>) {
           >
             General Weaken
           </button>
-          <button v-else type="submit" class="btn btn-primary ms-2" disabled>
+          <button v-else type="button" class="btn btn-primary ms-2" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
+
+          <button
+            v-if="isCompleted"
+            type="button"
+            class="ms-2 btn btn-primary"
+            @click="nextSolution"
+            :disabled="
+              config.exampleTraces.length === 0 ||
+              config.solutions === '' ||
+              config.solutions === 'No solution found'
+            "
+          >
+            Next
+          </button>
+          <button v-else type="button" class="btn btn-primary ms-2" disabled>
             <div class="spinner-border spinner-border-sm me-2" role="status"></div>
             <span>In progress ...</span>
           </button>
@@ -390,7 +416,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
             class="form-control"
             id="maxNodeInput"
             placeholder="Enter a number"
-            min="1"
+            min="10"
           />
         </div>
       </div>
@@ -404,7 +430,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
           v-model="config.solutions"
           class="form-control"
           id="solutionsTextarea"
-          rows="5"
+          rows="2"
           readonly
         ></textarea>
       </div>
