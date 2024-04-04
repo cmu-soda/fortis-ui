@@ -110,7 +110,7 @@ function simpleWeaken() {
   if (requestJSON === null) return
 
   const response = weakeningService.weakenSafetyInvariant(requestJSON)
-  handleWeakeningResponse(response as Promise<string[]>)
+  setTimeout(() => handleWeakeningResponse(response as Promise<string[]>), 500)
 }
 
 function gr1Weaken() {
@@ -122,7 +122,7 @@ function gr1Weaken() {
 
   requestJSON.maxNumOfNode = config.maxNumOfNode
   const response = weakeningService.weakenGR1SafetyInvariant(requestJSON)
-  handleWeakeningResponse(response as Promise<string[]>)
+  setTimeout(() => handleWeakeningResponse(response as Promise<string[]>), 500)
 }
 
 function parseRequestJSON(): WeakeningRequestJSON | null {
@@ -354,7 +354,13 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-auto offset-sm-2">
-          <button v-if="isCompleted" type="button" class="btn btn-primary" @click="simpleWeaken">
+          <button
+            v-if="isCompleted"
+            type="button"
+            class="btn btn-primary"
+            @click="simpleWeaken"
+            :disabled="config.exampleTraces.length === 0"
+          >
             Simple Weaken
           </button>
           <button v-else type="submit" class="btn btn-primary" disabled>
@@ -362,10 +368,16 @@ function handleWeakeningResponse(response: Promise<string[]>) {
             <span>In progress ...</span>
           </button>
 
-          <button v-if="isCompleted" type="button" class="ms-2 btn btn-primary" @click="gr1Weaken">
+          <button
+            v-if="isCompleted"
+            type="button"
+            class="ms-2 btn btn-primary"
+            @click="gr1Weaken"
+            :disabled="config.exampleTraces.length === 0"
+          >
             General Weaken
           </button>
-          <button v-else type="submit" class="btn btn-primary" disabled>
+          <button v-else type="submit" class="btn btn-primary ms-2" disabled>
             <div class="spinner-border spinner-border-sm me-2" role="status"></div>
             <span>In progress ...</span>
           </button>
