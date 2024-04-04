@@ -54,5 +54,6 @@ export const theracWeakeningConfig = {
   inputs: '',
   exampleTraces: [],
   exampleTracesPositive: [],
-  solutions: ''
+  solutions: '',
+  maxNumOfNode: 3
 }

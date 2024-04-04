@@ -6,6 +6,7 @@ import { toSpecJSON, toEvents, toTraces } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import { weakeningService } from '@/api/weakening'
 import RequestAlert from '@/components/RequestAlert.vue'
+import type { WeakeningRequestJSON } from '@/api/weakening'
 
 const requestResults = ref('')
 const isCompleted = ref(true)
@@ -101,17 +102,37 @@ function handleExampleResponse(responses: Promise<string[][]>[]) {
     })
 }
 
-function weaken() {
+function simpleWeaken() {
   resetAlert()
   config.solutions = ''
 
+  const requestJSON = parseRequestJSON()
+  if (requestJSON === null) return
+
+  const response = weakeningService.weakenSafetyInvariant(requestJSON)
+  handleWeakeningResponse(response as Promise<string[]>)
+}
+
+function gr1Weaken() {
+  resetAlert()
+  config.solutions = ''
+
+  const requestJSON = parseRequestJSON()
+  if (requestJSON === null) return
+
+  requestJSON.maxNumOfNode = config.maxNumOfNode
+  const response = weakeningService.weakenGR1SafetyInvariant(requestJSON)
+  handleWeakeningResponse(response as Promise<string[]>)
+}
+
+function parseRequestJSON(): WeakeningRequestJSON | null {
   const prop = config.prop.trim()
   const propSpecs = toSpecJSON([prop], SpecGroup.Property)
 
   if (propSpecs === undefined) {
     requestResults.value = 'Please enter at least one valid property.'
     showAlert.value = isCompleted.value = true
-    return
+    return null
   }
 
   const invariant = parseInvariant(propSpecs[0].content)
@@ -119,14 +140,12 @@ function weaken() {
   const positiveExamples = config.exampleTraces.filter((_, i) => config.exampleTracesPositive[i])
   const negativeExamples = config.exampleTraces.filter((_, i) => !config.exampleTracesPositive[i])
 
-  const requestJSON = {
+  return {
     invariant,
     fluents,
     positiveExamples: positiveExamples.map(toEvents),
     negativeExamples: negativeExamples.map(toEvents)
   }
-  const response = weakeningService.weakenSafetyInvariant(requestJSON)
-  handleWeakeningResponse(response as Promise<string[]>)
 }
 
 function parseInvariant(prop: string): string {
@@ -307,7 +326,7 @@ function handleWeakeningResponse(response: Promise<string[]>) {
       </div>
     </form>
 
-    <form @submit.prevent="weaken">
+    <form>
       <!-- Weakening Input -->
       <div class="mb-3 row">
         <label class="col-sm-2 col-form-label">Example Traces</label>
@@ -334,12 +353,33 @@ function handleWeakeningResponse(response: Promise<string[]>) {
 
       <!-- Submit Button -->
       <div class="mb-3 row">
-        <div class="col-sm-10 offset-sm-2">
-          <button v-if="isCompleted" type="submit" class="btn btn-primary">Weaken</button>
+        <div class="col-auto offset-sm-2">
+          <button v-if="isCompleted" type="button" class="btn btn-primary" @click="simpleWeaken">
+            Simple Weaken
+          </button>
           <button v-else type="submit" class="btn btn-primary" disabled>
             <div class="spinner-border spinner-border-sm me-2" role="status"></div>
             <span>In progress ...</span>
           </button>
+
+          <button v-if="isCompleted" type="button" class="ms-2 btn btn-primary" @click="gr1Weaken">
+            General Weaken
+          </button>
+          <button v-else type="submit" class="btn btn-primary" disabled>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>In progress ...</span>
+          </button>
+        </div>
+        <label for="maxNodeInput" class="col-auto col-form-label">Max Formula Size</label>
+        <div class="col-1">
+          <input
+            v-model="config.maxNumOfNode"
+            type="number"
+            class="form-control"
+            id="maxNodeInput"
+            placeholder="Enter a number"
+            min="1"
+          />
         </div>
       </div>
     </form>

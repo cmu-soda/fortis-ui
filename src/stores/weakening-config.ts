@@ -14,6 +14,7 @@ export interface WeakeningConfig {
   exampleTraces: string[]
   exampleTracesPositive: boolean[]
   solutions: string
+  maxNumOfNode: number
 }
 
 export const emptyWeakeningConfig: WeakeningConfig = {
@@ -26,5 +27,6 @@ export const emptyWeakeningConfig: WeakeningConfig = {
   inputs: '',
   exampleTraces: [],
   exampleTracesPositive: [],
-  solutions: ''
+  solutions: '',
+  maxNumOfNode: 3
 }

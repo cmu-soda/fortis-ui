@@ -6,6 +6,8 @@ export interface WeakeningService {
   generateExamplesFromProgress(req: ExampleGenRequestJSON): Promise<string[][]>
 
   weakenSafetyInvariant(req: WeakeningRequestJSON): Promise<string[]>
+
+  weakenGR1SafetyInvariant(req: WeakeningRequestJSON): Promise<string[]>
 }
 
 export interface ExampleGenRequestJSON {
@@ -23,6 +25,7 @@ export interface WeakeningRequestJSON {
   fluents: string[]
   positiveExamples: string[][]
   negativeExamples: string[][]
+  maxNumOfNode?: number
 }
 
 export const weakeningService: WeakeningService = {
@@ -69,5 +72,20 @@ export const weakeningService: WeakeningService = {
       throw new Error(content)
     }
     return (await response.json()) as string[]
+  },
+
+  weakenGR1SafetyInvariant: async function (req: WeakeningRequestJSON): Promise<string[]> {
+    const response = await fetch('http://localhost:8080/api/weakening/weakenGR1Invariant', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req)
+    })
+    if (!response.ok) {
+      const content = await response.text()
+      throw new Error(content)
+    }
+    return [await response.text()]
   }
 }
