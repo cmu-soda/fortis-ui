@@ -40,7 +40,7 @@ function onSelected(idx: number, group: SpecGroup) {
     <FileToolBar />
     <div class="p-1">
       <FileList
-        name="System"
+        name="Machine"
         :specs="specStore.sysSpecs"
         :group="SpecGroup.System"
         :selected-idx="sysSelectedIdx"

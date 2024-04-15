@@ -144,7 +144,7 @@ function handleStringResponse(response: Promise<string>) {
     <form @submit.prevent="submitForm">
       <!-- Sys Input -->
       <div class="mb-3 row">
-        <label for="sysInput" class="col-sm-2 col-form-label">System</label>
+        <label for="sysInput" class="col-sm-2 col-form-label">Machine</label>
         <div class="col-sm-10">
           <input
             v-model="config.sys"
