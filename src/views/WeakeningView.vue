@@ -14,10 +14,8 @@ const isSuccess = ref(false)
 const showAlert = ref(false)
 
 function resetAlert() {
-  loggingStore.log(
-    '\n================================================================================\n'
-  )
-
+  loggingStore.clear()
+  
   requestResults.value = ''
   isCompleted.value = false
   isSuccess.value = false

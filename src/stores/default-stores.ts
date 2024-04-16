@@ -22,5 +22,9 @@ export const loggingStore = reactive({
     if (this.content.length > 10000) {
       this.content = this.content.substring(this.content.length - 10000)
     }
+  },
+
+  clear() {
+    this.content = ''
   }
 })
