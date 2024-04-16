@@ -1,10 +1,14 @@
 import { reactive } from 'vue'
 import { SimpleSpecStore, type SpecStore } from './specs'
-import { theracSpecStore } from './specs-therac25'
+import {
+  theracSpecStore,
+  theracRobustifyConfig,
+  theracRobustnessConfig,
+  theracWeakeningConfig
+} from './specs-therac25'
 import { emptyRobustifyConfig, type RobustifyConfig } from './robustify-config'
 import { emptyRobustnessConfig, type RobustnessConfig } from './robustness-config'
 import { emptyWeakeningConfig, type WeakeningConfig } from './weakening-config'
-import { theracRobustifyConfig, theracRobustnessConfig, theracWeakeningConfig } from './config-mock'
 
 export const specStore: SpecStore = reactive(new SimpleSpecStore())
 
