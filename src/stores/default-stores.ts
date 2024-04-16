@@ -1,18 +1,18 @@
 import { reactive } from 'vue'
 import { SimpleSpecStore, type SpecStore } from './specs'
-import { theracSpecStore } from './specs-mock'
-import type { RobustifyConfig } from './robustify-config'
-import type { RobustnessConfig } from './robustness-config'
-import { type WeakeningConfig } from './weakening-config'
+import { theracSpecStore } from './specs-therac25'
+import { emptyRobustifyConfig, type RobustifyConfig } from './robustify-config'
+import { emptyRobustnessConfig, type RobustnessConfig } from './robustness-config'
+import { emptyWeakeningConfig, type WeakeningConfig } from './weakening-config'
 import { theracRobustifyConfig, theracRobustnessConfig, theracWeakeningConfig } from './config-mock'
 
-export const specStore: SpecStore = reactive(theracSpecStore)
+export const specStore: SpecStore = reactive(new SimpleSpecStore())
 
-export const robustnessConfigStore: RobustnessConfig = reactive(theracRobustnessConfig)
+export const robustnessConfigStore: RobustnessConfig = reactive(emptyRobustnessConfig)
 
-export const robustifyConfigStore: RobustifyConfig = reactive(theracRobustifyConfig)
+export const robustifyConfigStore: RobustifyConfig = reactive(emptyRobustifyConfig)
 
-export const weakeningConfigStore: WeakeningConfig = reactive(theracWeakeningConfig)
+export const weakeningConfigStore: WeakeningConfig = reactive(emptyWeakeningConfig)
 
 export const loggingStore = reactive({
   content: '',
@@ -28,3 +28,17 @@ export const loggingStore = reactive({
     this.content = ''
   }
 })
+
+export function loadTherac25() {
+  // update specStore with data from theracSpecStore
+  Object.assign(specStore, theracSpecStore)
+  Object.assign(robustifyConfigStore, theracRobustifyConfig)
+  Object.assign(robustnessConfigStore, theracRobustnessConfig)
+  Object.assign(weakeningConfigStore, theracWeakeningConfig)
+}
+
+export function loadVoting() {}
+
+export function loadOyster() {}
+
+export function loadInfusionPump() {}
