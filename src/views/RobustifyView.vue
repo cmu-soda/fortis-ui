@@ -54,7 +54,7 @@ function submitForm() {
         P3: toTraces(config.preferredBeh.P3),
         P2: toTraces(config.preferredBeh.P2),
         P1: toTraces(config.preferredBeh.P1),
-        P0: toTraces(config.preferredBeh.P0)
+        P0: [] // toTraces(config.preferredBeh.P0)
       },
       controllable: {
         P3: toEvents(config.controllable.P3),
@@ -148,7 +148,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
       </div>
 
       <!-- Progress Input -->
-      <!-- <div class="mb-3 row">
+      <div class="mb-3 row">
         <label for="progressInput" class="col-sm-2 col-form-label">Progress</label>
         <div class="col-sm-10">
           <input
@@ -159,14 +159,14 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             placeholder="Enter events separated by ,"
           />
         </div>
-      </div> -->
+      </div>
 
       <!-- Preferred Behaviors Input by Priority -->
       <div class="mb-3 row">
         <label class="col-sm-2 col-form-label">Preferred Behaviors</label>
         <div class="col-sm-10">
           <!-- Must Haves -->
-          <div class="mb-1 row">
+          <!-- <div class="mb-1 row">
             <label for="preferredP0Input" class="col-sm-2 col-form-label">Must-Have</label>
             <div class="col">
               <textarea
@@ -178,7 +178,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
                 rows="2"
               />
             </div>
-          </div>
+          </div> -->
 
           <!-- Essential -->
           <div class="mb-1 row">
