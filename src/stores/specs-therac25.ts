@@ -73,7 +73,7 @@ theracSpecStore.addSpec(
   SpecGroup.System
 )
 
-const env0 = `ENV = (x -> ENV_1 | e -> ENV_1),
+const env_base = `ENV = (x -> ENV_1 | e -> ENV_1),
 ENV_1 = (enter -> ENV_2),
 ENV_2 = (b -> enter -> ENV)+{up}.        
 `
@@ -81,13 +81,13 @@ ENV_2 = (b -> enter -> ENV)+{up}.
 theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
-    name: 'env0.lts',
-    content: env0
+    name: 'env_base.lts',
+    content: env_base
   },
   SpecGroup.Environment
 )
 
-const env = `ENV = (x -> ENV_1 | e -> ENV_1),
+const env_dev = `ENV = (x -> ENV_1 | e -> ENV_1),
 ENV_1 = (enter -> ENV_2 | up -> ENV),
 ENV_2 = (b -> enter -> ENV | up -> ENV_1).        
 `
@@ -95,13 +95,13 @@ ENV_2 = (b -> enter -> ENV | up -> ENV_1).
 theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
-    name: 'env.lts',
-    content: env
+    name: 'env_dev.lts',
+    content: env_dev
   },
   SpecGroup.Environment
 )
 
-const dev = `ENV = (x -> ENV_1 | e -> ENV_1),
+const dev_exp = `ENV = (x -> ENV_1 | e -> ENV_1),
 ENV_1 = (enter -> ENV_2 | commission -> up -> ENV),
 ENV_2 = (b -> enter -> ENV | commission -> up -> ENV_1).
 `
@@ -109,13 +109,13 @@ ENV_2 = (b -> enter -> ENV | commission -> up -> ENV_1).
 theracSpecStore.addSpec(
   {
     type: SpecType.FSP,
-    name: 'dev.lts',
-    content: dev
+    name: 'dev_exp.lts',
+    content: dev_exp
   },
   SpecGroup.Environment
 )
 
-const p = `fluent Xray = <set_xray, {set_ebeam, reset}>
+const p_w = `fluent Xray = <set_xray, {set_ebeam, reset}>
 fluent EBeam = <set_ebeam, {set_xray, reset}>
 fluent InPlace = <x, e> initially 1
 fluent Fired = <{fire_xray, fire_ebeam}, reset>
@@ -126,13 +126,13 @@ assert OVER_DOSE = [](Xray && Fired -> InPlace)
 theracSpecStore.addSpec(
   {
     type: SpecType.FLTL,
-    name: 'p.lts',
-    content: p
+    name: 'p_w.lts',
+    content: p_w
   },
   SpecGroup.Property
 )
 
-const p2 = `fluent Xray = <set_xray, {set_ebeam, reset}>
+const p_s = `fluent Xray = <set_xray, {set_ebeam, reset}>
 fluent EBeam = <set_ebeam, {set_xray, reset}>
 fluent InPlace = <x, e> initially 1
 fluent Fired = <{fire_xray, fire_ebeam}, reset>
@@ -143,8 +143,8 @@ assert OVER_DOSE = [](Xray -> InPlace)
 theracSpecStore.addSpec(
   {
     type: SpecType.FLTL,
-    name: 'p2.lts',
-    content: p2
+    name: 'p_s.lts',
+    content: p_s
   },
   SpecGroup.Property
 )
@@ -152,10 +152,10 @@ theracSpecStore.addSpec(
 export const theracRobustnessConfig = {
   sys: 'sys.lts',
   sys2: '',
-  env: 'env0.lts',
-  prop: 'p.lts',
+  env: 'env_base.lts',
+  prop: 'p_w.lts',
   prop2: '',
-  dev: 'dev.lts',
+  dev: 'dev_exp.lts',
   mode: RobustnessMode.Robustness,
   minimized: true,
   expand: false,
@@ -165,8 +165,8 @@ export const theracRobustnessConfig = {
 
 export const theracRobustifyConfig = {
   sys: 'sys.lts',
-  env: 'env.lts',
-  prop: 'p.lts',
+  env: 'env_dev.lts',
+  prop: 'p_w.lts',
   progress: 'fire_xray, fire_ebeam',
   preferredBeh: {
     P0: '',
@@ -193,8 +193,8 @@ export const theracRobustifyConfig = {
 
 export const theracWeakeningConfig = {
   sys: 'sys.lts',
-  env: 'env.lts',
-  prop: 'p2.lts',
+  env: 'env_dev.lts',
+  prop: 'p_s.lts',
   mode: WeakeningMode.Trace,
   progress: '',
   trace: 'x, up, e, enter, b',
