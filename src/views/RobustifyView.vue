@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toSpecJSON, toTraces, toEvents } from '@/api/commons'
+import { toSpecJSON, toTraces, toEvents, type SpecJSON } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import {
   robustificationService,
@@ -34,12 +34,13 @@ function submitForm() {
   const envList = config.env.split(',').map((s) => s.trim())
   const propList = config.prop.split(',').map((s) => s.trim())
 
-  const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
-  const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
-  const propSpecs = toSpecJSON(propList, SpecGroup.Property)
-
-  if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
-    requestResults.value = 'Please enter at least one valid system, environment, and property.'
+  let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
+  try {
+    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
+    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    propSpecs = toSpecJSON(propList, SpecGroup.Property)
+  } catch (error: any) {
+    requestResults.value = "Failed to load specs, " + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }

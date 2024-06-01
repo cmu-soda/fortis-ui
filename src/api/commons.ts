@@ -1,18 +1,19 @@
 import { specStore } from '@/stores/default-stores'
-import type { SpecGroup } from '@/stores/specs'
+import { SpecGroup } from '@/stores/specs'
 
 export interface SpecJSON {
   type: string
   content: string
 }
 
-export function toSpecJSON(names: string[], group: SpecGroup): SpecJSON[] | undefined {
+export function toSpecJSON(names: string[], group: SpecGroup): SpecJSON[] {
+  const nonemptyNames = names.filter((name) => name !== '')
   const specJSON = names
     .map((name) => specStore.getSpec(name, group))
     .filter((s) => s !== undefined)
     .map((spec) => ({ type: spec!.type, content: spec!.content }))
-  if (specJSON.length === 0) {
-    return undefined
+  if (specJSON.length !== nonemptyNames.length) {
+    throw new Error('Some specs not found in ' + Object.values(SpecGroup)[group])
   }
   return specJSON
 }

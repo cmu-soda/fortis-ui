@@ -26,7 +26,7 @@ function onSelected(idx: number, group: SpecGroup) {
   propSelectedIdx.value = -1
 
   switch (group) {
-    case SpecGroup.System:
+    case SpecGroup.Machine:
       sysSelectedIdx.value = idx
       break
     case SpecGroup.Environment:
@@ -50,7 +50,7 @@ function onSelected(idx: number, group: SpecGroup) {
       <FileList
         name="Machine"
         :specs="specStore.sysSpecs"
-        :group="SpecGroup.System"
+        :group="SpecGroup.Machine"
         :selected-idx="sysSelectedIdx"
         @selected="onSelected"
       />

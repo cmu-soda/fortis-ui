@@ -70,7 +70,7 @@ theracSpecStore.addSpec(
     name: 'sys.lts',
     content: sys
   },
-  SpecGroup.System
+  SpecGroup.Machine
 )
 
 const env_base = `ENV = (x -> ENV_1 | e -> ENV_1),

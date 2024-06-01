@@ -9,7 +9,7 @@ import { specStore } from '@/stores/default-stores'
 
 const newSpecToggle = ref(false)
 const openSpecToggle = ref(false)
-const addSpecGroup = ref(SpecGroup.System)
+const addSpecGroup = ref(SpecGroup.Machine)
 const addSpecName = ref('')
 const addSpecType = ref(SpecType.FSP)
 const selectedFile = ref<File | undefined>()
@@ -101,10 +101,10 @@ function openSpecFile() {
             type="radio"
             class="btn-check"
             id="addSpecGroupSys"
-            :value="SpecGroup.System"
+            :value="SpecGroup.Machine"
             v-model="addSpecGroup"
           />
-          <label class="btn btn-outline-secondary" for="addSpecGroupSys">Sys</label>
+          <label class="btn btn-outline-secondary" for="addSpecGroupSys">M</label>
 
           <input
             type="radio"
@@ -113,7 +113,7 @@ function openSpecFile() {
             :value="SpecGroup.Environment"
             v-model="addSpecGroup"
           />
-          <label class="btn btn-outline-secondary" for="addSpecGroupEnv">Env</label>
+          <label class="btn btn-outline-secondary" for="addSpecGroupEnv">E</label>
 
           <input
             type="radio"
@@ -122,7 +122,7 @@ function openSpecFile() {
             :value="SpecGroup.Property"
             v-model="addSpecGroup"
           />
-          <label class="btn btn-outline-secondary" for="addSpecGroupProp">Prop</label>
+          <label class="btn btn-outline-secondary" for="addSpecGroupProp">P</label>
         </div>
       </div>
       <div>

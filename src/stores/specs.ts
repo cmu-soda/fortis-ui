@@ -17,7 +17,7 @@ export interface Spec {
 }
 
 export enum SpecGroup {
-  System,
+  Machine,
   Environment,
   Property
 }
@@ -53,7 +53,7 @@ export class SimpleSpecStore implements SpecStore {
 
   getSpec(name: string, group: SpecGroup): Spec | undefined {
     switch (group) {
-      case SpecGroup.System:
+      case SpecGroup.Machine:
         return this.sysSpecs.find((spec) => spec.name === name)
       case SpecGroup.Environment:
         return this.envSpecs.find((spec) => spec.name === name)
@@ -64,7 +64,7 @@ export class SimpleSpecStore implements SpecStore {
 
   selectSpec(name: string, group: SpecGroup): void {
     switch (group) {
-      case SpecGroup.System:
+      case SpecGroup.Machine:
         this.selected = this.sysSpecs.find((spec) => spec.name === name)
         break
       case SpecGroup.Environment:
@@ -81,7 +81,7 @@ export class SimpleSpecStore implements SpecStore {
     spec.cached = spec.content
     spec.changed = false
     switch (group) {
-      case SpecGroup.System:
+      case SpecGroup.Machine:
         this.sysSpecs.push(spec)
         break
       case SpecGroup.Environment:
@@ -95,7 +95,7 @@ export class SimpleSpecStore implements SpecStore {
 
   removeSpec(name: string, group: SpecGroup): void {
     switch (group) {
-      case SpecGroup.System:
+      case SpecGroup.Machine:
         this.sysSpecs = this.sysSpecs.filter((spec) => spec.name !== name)
         break
       case SpecGroup.Environment:
@@ -109,7 +109,7 @@ export class SimpleSpecStore implements SpecStore {
 
   updateSpec(name: string, content: string, group: SpecGroup): void {
     switch (group) {
-      case SpecGroup.System:
+      case SpecGroup.Machine:
         this.sysSpecs = this.sysSpecs.map((spec) =>
           spec.name === name ? { ...spec, content, changed: false } : spec
         )

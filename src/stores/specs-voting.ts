@@ -17,7 +17,7 @@ votingSpecStore.addSpec(
         name: 'sys.lts',
         content: sys
     },
-    SpecGroup.System
+    SpecGroup.Machine
 )
 
 const env_base = `ENV = (v.enter -> VOTER | eo.enter -> EO),

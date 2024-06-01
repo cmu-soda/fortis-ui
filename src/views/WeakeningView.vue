@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { WeakeningMode } from '@/stores/weakening-config'
 import { weakeningConfigStore as config, loggingStore } from '@/stores/default-stores'
-import { toSpecJSON, toEvents, toTraces } from '@/api/commons'
+import { toSpecJSON, toEvents, toTraces, type SpecJSON } from '@/api/commons'
 import { SpecGroup } from '@/stores/specs'
 import { weakeningService } from '@/api/weakening'
 import RequestAlert from '@/components/RequestAlert.vue'
@@ -30,12 +30,13 @@ function generateExamples(additional: boolean = false) {
   const envList = config.env.split(',').map((s) => s.trim())
   const prop = config.prop.trim()
 
-  const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
-  const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
-  const propSpecs = toSpecJSON([prop], SpecGroup.Property)
-
-  if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
-    requestResults.value = 'Please enter at least one valid system, environment, and property.'
+  let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
+  try {
+    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
+    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    propSpecs = toSpecJSON([prop], SpecGroup.Property)
+  } catch (error: any) {
+    requestResults.value = "Failed to load specs: " + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }
@@ -133,10 +134,12 @@ function nextSolution() {
 
 function parseRequestJSON(): WeakeningRequestJSON | null {
   const prop = config.prop.trim()
-  const propSpecs = toSpecJSON([prop], SpecGroup.Property)
 
-  if (propSpecs === undefined) {
-    requestResults.value = 'Please enter at least one valid property.'
+  let propSpecs: SpecJSON[]
+  try {
+    propSpecs = toSpecJSON([prop], SpecGroup.Property)
+  } catch (error: any) {
+    requestResults.value = "Failed to load specs: " + error.toString()
     showAlert.value = isCompleted.value = true
     return null
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toSpecJSON } from '@/api/commons'
+import { toSpecJSON, type SpecJSON } from '@/api/commons'
 import { RobustnessMode, type EquivClass, robustnessService } from '@/api/robustness'
 import { SpecGroup } from '@/stores/specs'
 import { robustnessConfigStore as config, loggingStore } from '@/stores/default-stores'
@@ -32,12 +32,18 @@ function submitForm() {
   const prop2List = config.prop2.split(',').map((s) => s.trim())
   const devList = config.dev.split(',').map((s) => s.trim())
 
-  const sysSpecs = toSpecJSON(sysList, SpecGroup.System)
-  const envSpecs = toSpecJSON(envList, SpecGroup.Environment)
-  const propSpecs = toSpecJSON(propList, SpecGroup.Property)
+  let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
+  let sys2Specs: SpecJSON[], prop2Specs: SpecJSON[], devSpecs: SpecJSON[]
+  try {
+    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
+    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    propSpecs = toSpecJSON(propList, SpecGroup.Property)
 
-  if (sysSpecs === undefined || envSpecs === undefined || propSpecs === undefined) {
-    requestResults.value = 'Please enter at least one valid system, environment, and property.'
+    sys2Specs = toSpecJSON(sys2List, SpecGroup.Machine)
+    prop2Specs = toSpecJSON(prop2List, SpecGroup.Property)
+    devSpecs = toSpecJSON(devList, SpecGroup.Environment)
+  } catch (error: any) {
+    requestResults.value = "Failed to load specs: " + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }
@@ -47,9 +53,9 @@ function submitForm() {
     envSpecs,
     propSpecs,
 
-    sys2Specs: toSpecJSON(sys2List, SpecGroup.System),
-    prop2Specs: toSpecJSON(prop2List, SpecGroup.Property),
-    devSpecs: toSpecJSON(devList, SpecGroup.Environment),
+    sys2Specs,
+    prop2Specs,
+    devSpecs,
 
     options: {
       expand: config.expand,
