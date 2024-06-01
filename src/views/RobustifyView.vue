@@ -36,8 +36,8 @@ function submitForm() {
 
   let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
   try {
-    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
-    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    sysSpecs = toSpecJSON(sysList)
+    envSpecs = toSpecJSON(envList)
     propSpecs = toSpecJSON(propList, SpecGroup.Property)
   } catch (error: any) {
     requestResults.value = "Failed to load specs, " + error.toString()

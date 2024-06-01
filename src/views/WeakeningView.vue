@@ -32,8 +32,8 @@ function generateExamples(additional: boolean = false) {
 
   let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
   try {
-    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
-    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    sysSpecs = toSpecJSON(sysList)
+    envSpecs = toSpecJSON(envList)
     propSpecs = toSpecJSON([prop], SpecGroup.Property)
   } catch (error: any) {
     requestResults.value = "Failed to load specs: " + error.toString()

@@ -29,7 +29,7 @@ export interface SpecStore {
 
   selected?: Spec
 
-  getSpec(name: string, group: SpecGroup): Spec | undefined
+  getSpec(name: string, group?: SpecGroup): Spec | undefined
 
   addSpec(spec: Spec, group: SpecGroup): void
 
@@ -51,7 +51,7 @@ export class SimpleSpecStore implements SpecStore {
 
   selected?: Spec
 
-  getSpec(name: string, group: SpecGroup): Spec | undefined {
+  getSpec(name: string, group?: SpecGroup): Spec | undefined {
     switch (group) {
       case SpecGroup.Machine:
         return this.sysSpecs.find((spec) => spec.name === name)
@@ -59,6 +59,11 @@ export class SimpleSpecStore implements SpecStore {
         return this.envSpecs.find((spec) => spec.name === name)
       case SpecGroup.Property:
         return this.propSpecs.find((spec) => spec.name === name)
+      default:
+        // merge all specs into one and find by the name
+        return [...this.sysSpecs, ...this.envSpecs, ...this.propSpecs].find(
+          (spec) => spec.name === name
+        )
     }
   }
 

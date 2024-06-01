@@ -6,14 +6,17 @@ export interface SpecJSON {
   content: string
 }
 
-export function toSpecJSON(names: string[], group: SpecGroup): SpecJSON[] {
+export function toSpecJSON(names: string[], group?: SpecGroup): SpecJSON[] {
   const nonemptyNames = names.filter((name) => name !== '')
   const specJSON = names
     .map((name) => specStore.getSpec(name, group))
     .filter((s) => s !== undefined)
     .map((spec) => ({ type: spec!.type, content: spec!.content }))
   if (specJSON.length !== nonemptyNames.length) {
-    throw new Error('Some specs not found in ' + Object.values(SpecGroup)[group])
+    if (group === undefined)
+      throw new Error('Some specs not found in all groups')
+    else 
+      throw new Error('Some specs not found in ' + Object.values(SpecGroup)[group])
   }
   return specJSON
 }

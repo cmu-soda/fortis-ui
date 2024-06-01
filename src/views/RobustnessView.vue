@@ -35,13 +35,13 @@ function submitForm() {
   let sysSpecs: SpecJSON[], envSpecs: SpecJSON[], propSpecs: SpecJSON[]
   let sys2Specs: SpecJSON[], prop2Specs: SpecJSON[], devSpecs: SpecJSON[]
   try {
-    sysSpecs = toSpecJSON(sysList, SpecGroup.Machine)
-    envSpecs = toSpecJSON(envList, SpecGroup.Environment)
+    sysSpecs = toSpecJSON(sysList)
+    envSpecs = toSpecJSON(envList)
     propSpecs = toSpecJSON(propList, SpecGroup.Property)
 
-    sys2Specs = toSpecJSON(sys2List, SpecGroup.Machine)
+    sys2Specs = toSpecJSON(sys2List)
     prop2Specs = toSpecJSON(prop2List, SpecGroup.Property)
-    devSpecs = toSpecJSON(devList, SpecGroup.Environment)
+    devSpecs = toSpecJSON(devList)
   } catch (error: any) {
     requestResults.value = "Failed to load specs: " + error.toString()
     showAlert.value = isCompleted.value = true
