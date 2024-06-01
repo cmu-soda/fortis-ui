@@ -9,6 +9,7 @@ import {
 import { emptyRobustifyConfig, type RobustifyConfig } from './robustify-config'
 import { emptyRobustnessConfig, type RobustnessConfig } from './robustness-config'
 import { emptyWeakeningConfig, type WeakeningConfig } from './weakening-config'
+import { votingRobustifyConfig, votingRobustnessConfig, votingSpecStore, votingWeakeningConfig } from './specs-voting'
 
 export const specStore: SpecStore = reactive(new SimpleSpecStore())
 
@@ -41,7 +42,12 @@ export function loadTherac25() {
   Object.assign(weakeningConfigStore, theracWeakeningConfig)
 }
 
-export function loadVoting() {}
+export function loadVoting() {
+  Object.assign(specStore, votingSpecStore)
+  Object.assign(robustifyConfigStore, votingRobustifyConfig)
+  Object.assign(robustnessConfigStore, votingRobustnessConfig)
+  Object.assign(weakeningConfigStore, votingWeakeningConfig)
+}
 
 export function loadOyster() {}
 
