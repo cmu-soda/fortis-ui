@@ -26,12 +26,22 @@ export function toTraces(traces: string): string[][] {
     .split(';')
     .map((s) => s.trim())
     .filter((s) => s !== '')
-    .map((s) => s.split(',').map((e) => e.trim()))
+    .map(toEvents)
 }
 
 export function toEvents(events: string): string[] {
-  return events
-    .split(',')
-    .map((s) => s.trim())
-    .filter((s) => s !== '')
+  const i = events.indexOf('+')
+  if (i === -1) {
+    return events
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s !== '')
+  } else {
+    const trace = events.substring(0, i)
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s !== '')
+    trace.push(events.substring(i))
+    return trace
+  }
 }
