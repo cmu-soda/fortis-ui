@@ -431,14 +431,14 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           role="tabpanel"
         >
           <div class="my-2 row">
-            <label class="col-sm-1 col-form-label">Model</label>
+            <label class="col-sm-2 col-form-label">Model</label>
             <div class="col">
               <textarea :value="s.model" rows="10" class="form-control" readonly />
             </div>
           </div>
 
           <div class="my-2 row">
-            <label class="col-sm-1 col-form-label">Preferred</label>
+            <label class="col-sm-2 col-form-label">Preferred</label>
             <div class="col">
               <textarea
                 :value="s.preferred.map((t) => t.join(', ')).join(';\n')"
@@ -450,16 +450,16 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           </div>
 
           <div class="my-2 row">
-            <label class="col-sm-1 col-form-label">Controllable</label>
+            <label class="col-sm-2 col-form-label">Controllable w/ cost</label>
             <div class="col">
-              <input :value="s.controllable.join(', ')" type="text" class="form-control" readonly />
+              <input :value="s.controllable.filter(x => !config.controllable.P0.includes(x)).join(', ')" type="text" class="form-control" readonly />
             </div>
           </div>
 
           <div class="my-2 row">
-            <label class="col-sm-1 col-form-label">Observable</label>
+            <label class="col-sm-2 col-form-label">Observable w/ cost</label>
             <div class="col">
-              <input :value="s.observable.join(', ')" type="text" class="form-control" readonly />
+              <input :value="s.observable.filter(x => !config.observable.P0.includes(x)).join(', ')" type="text" class="form-control" readonly />
             </div>
           </div>
         </div>
