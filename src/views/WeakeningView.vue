@@ -280,12 +280,13 @@ function handleWeakeningResponse(response: Promise<string>) {
       <div v-if="config.mode === WeakeningMode.Trace" class="mb-3 row">
         <label for="traceInput" class="col-sm-2 col-form-label">Trace</label>
         <div class="col-sm-10">
-          <input
+          <textarea
             v-model="config.trace"
             type="text"
             class="form-control"
             id="traceInput"
             placeholder="Enter the observable trace, events separated by ',' and traces separated by ';'"
+            rows="1"
           />
         </div>
       </div>

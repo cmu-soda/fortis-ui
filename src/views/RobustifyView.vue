@@ -236,12 +236,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             <!-- Costly -->
             <label for="controllableP3Input" class="col-sm-2 col-form-label">Costly</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.controllable.P3"
                 type="text"
                 class="form-control"
                 id="controllableP3Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -250,12 +251,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="controllableP2Input" class="col-sm-2 col-form-label">Moderate</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.controllable.P2"
                 type="text"
                 class="form-control"
                 id="controllableP2Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -264,12 +266,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="controllableP1Input" class="col-sm-2 col-form-label">Cheap</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.controllable.P1"
                 type="text"
                 class="form-control"
                 id="controllableP1Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -278,12 +281,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="controllableP0Input" class="col-sm-2 col-form-label">No Cost</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.controllable.P0"
                 type="text"
                 class="form-control"
                 id="controllableP0Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -298,12 +302,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             <!-- Costly -->
             <label for="observableP3Input" class="col-sm-2 col-form-label">Costly</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.observable.P3"
                 type="text"
                 class="form-control"
                 id="observableP3Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -312,12 +317,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="observableP2Input" class="col-sm-2 col-form-label">Moderate</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.observable.P2"
                 type="text"
                 class="form-control"
                 id="observableP2Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -326,12 +332,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="observableP1Input" class="col-sm-2 col-form-label">Cheap</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.observable.P1"
                 type="text"
                 class="form-control"
                 id="observableP1Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
@@ -340,12 +347,13 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="mb-1 row">
             <label for="observableP0Input" class="col-sm-2 col-form-label">No Cost</label>
             <div class="col">
-              <input
+              <textarea
                 v-model="config.observable.P0"
                 type="text"
                 class="form-control"
                 id="observableP0Input"
                 placeholder="Enter events separated by ,"
+                rows="1"
               />
             </div>
           </div>
