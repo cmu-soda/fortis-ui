@@ -13,10 +13,8 @@ export function toSpecJSON(names: string[], group?: SpecGroup): SpecJSON[] {
     .filter((s) => s !== undefined)
     .map((spec) => ({ type: spec!.type, content: spec!.content }))
   if (specJSON.length !== nonemptyNames.length) {
-    if (group === undefined)
-      throw new Error('Some specs not found in all groups')
-    else 
-      throw new Error('Some specs not found in ' + Object.values(SpecGroup)[group])
+    if (group === undefined) throw new Error('Some specs not found in all groups')
+    else throw new Error('Some specs not found in ' + Object.values(SpecGroup)[group])
   }
   return specJSON
 }
@@ -37,7 +35,8 @@ export function toEvents(events: string): string[] {
       .map((s) => s.trim())
       .filter((s) => s !== '')
   } else {
-    const trace = events.substring(0, i)
+    const trace = events
+      .substring(0, i)
       .split(',')
       .map((s) => s.trim())
       .filter((s) => s !== '')

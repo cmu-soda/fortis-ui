@@ -160,12 +160,12 @@ DISPENSE[system_state:SystemState][dispense:DispenseState] =
 `
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'lines.lts',
-        content: lines
-    },
-    SpecGroup.Machine
+  {
+    type: SpecType.FSP,
+    name: 'lines.lts',
+    content: lines
+  },
+  SpecGroup.Machine
 )
 
 const alarm = `//======================
@@ -252,12 +252,12 @@ ALARM[alarm_state:AlarmState] =
 `
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'alarm.lts',
-        content: alarm
-    },
-    SpecGroup.Machine
+  {
+    type: SpecType.FSP,
+    name: 'alarm.lts',
+    content: alarm
+  },
+  SpecGroup.Machine
 )
 
 const power = `//======================
@@ -373,12 +373,12 @@ POWER_ON[plug_state:PluggedState][battery_state:BatteryState] =
 `
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'power.lts',
-        content: power
-    },
-    SpecGroup.Machine
+  {
+    type: SpecType.FSP,
+    name: 'power.lts',
+    content: power
+  },
+  SpecGroup.Machine
 )
 
 const env_base = `range LINES = 1..1
@@ -414,12 +414,12 @@ RUN[i:LINES] = (
 `
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'env_base.lts',
-        content: env_base
-    },
-    SpecGroup.Environment
+  {
+    type: SpecType.FSP,
+    name: 'env_base.lts',
+    content: env_base
+  },
+  SpecGroup.Environment
 )
 
 const env_dev = `range LINES = 1..1
@@ -466,12 +466,12 @@ ENV = (
 `
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'env_dev.lts',
-        content: env_dev
-    },
-    SpecGroup.Environment
+  {
+    type: SpecType.FSP,
+    name: 'env_dev.lts',
+    content: env_dev
+  },
+  SpecGroup.Environment
 )
 
 const p = `P = (line[1].set_rate -> RATE_SET | power_failure -> P),
@@ -479,12 +479,12 @@ RATE_SET = (line[1].set_rate -> RATE_SET | power_failure -> P | line[1].dispense
 DISPENSE = (line[1].dispense_main_med_flow -> DISPENSE | line[1].flow_complete -> P | power_failure -> P).`
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'p.lts',
-        content: p
-    },
-    SpecGroup.Property
+  {
+    type: SpecType.FSP,
+    name: 'p.lts',
+    content: p
+  },
+  SpecGroup.Property
 )
 
 const p_w = `fluent Dispensing = <line[1].dispense_main_med_flow, {alarm_rings, alarm_silence, battery_charge, battery_spent, enable_alarm, line[1].change_settings, line[1].clear_rate, line[1].confirm_settings, line[1].erase_and_unlock_line, line[1].flow_complete, line[1].lock_line, line[1].lock_unit, line[1].set_rate, line[1].start_dispense, line[1].unlock_unit, plug_in, power_failure, turn_off, turn_on, unplug}>
@@ -494,12 +494,12 @@ fluent Plugged = <plug_in, unplug>
 assert SAFE_DISPENSE = [](Dispensing -> Plugged || !PowerFailed)`
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FLTL,
-        name: 'p_w.lts',
-        content: p_w
-    },
-    SpecGroup.Property
+  {
+    type: SpecType.FLTL,
+    name: 'p_w.lts',
+    content: p_w
+  },
+  SpecGroup.Property
 )
 
 const p_s = `fluent Dispensing = <line[1].dispense_main_med_flow, {alarm_rings, alarm_silence, battery_charge, battery_spent, enable_alarm, line[1].change_settings, line[1].clear_rate, line[1].confirm_settings, line[1].erase_and_unlock_line, line[1].flow_complete, line[1].lock_line, line[1].lock_unit, line[1].set_rate, line[1].start_dispense, line[1].unlock_unit, plug_in, power_failure, turn_off, turn_on, unplug}>
@@ -509,12 +509,12 @@ fluent Plugged = <plug_in, unplug>
 assert SAFE_DISPENSE = [](Dispensing -> Plugged)`
 
 pumpSpecStore.addSpec(
-    {
-        type: SpecType.FLTL,
-        name: 'p_s.lts',
-        content: p_s
-    },
-    SpecGroup.Property
+  {
+    type: SpecType.FLTL,
+    name: 'p_s.lts',
+    content: p_s
+  },
+  SpecGroup.Property
 )
 
 export const pumpRobustnessConfig = {
@@ -565,7 +565,8 @@ export const pumpWeakeningConfig = {
   prop: 'p_s.lts',
   mode: WeakeningMode.Trace,
   progress: '',
-  trace: 'plug_in, turn_on, line.1.start_dispense, line.1.dispense_main_med_flow, unplug, line.1.dispense_main_med_flow, plug_in, line.1.dispense_main_med_flow, line.1.flow_complete, turn_off',
+  trace:
+    'plug_in, turn_on, line.1.start_dispense, line.1.dispense_main_med_flow, unplug, line.1.dispense_main_med_flow, plug_in, line.1.dispense_main_med_flow, line.1.flow_complete, turn_off',
   inputs: '',
   exampleTraces: [],
   exampleTracesPositive: [],

@@ -9,9 +9,24 @@ import {
 import { emptyRobustifyConfig, type RobustifyConfig } from './robustify-config'
 import { emptyRobustnessConfig, type RobustnessConfig } from './robustness-config'
 import { emptyWeakeningConfig, type WeakeningConfig } from './weakening-config'
-import { votingRobustifyConfig, votingRobustnessConfig, votingSpecStore, votingWeakeningConfig } from './specs-voting'
-import { pumpSpecStore, pumpRobustifyConfig, pumpRobustnessConfig, pumpWeakeningConfig } from './spec-pump'
-import { oysterRobustifyConfig, oysterRobustnessConfig, oysterSpecStore, oysterWeakeningConfig } from './spec-oyster'
+import {
+  votingRobustifyConfig,
+  votingRobustnessConfig,
+  votingSpecStore,
+  votingWeakeningConfig
+} from './specs-voting'
+import {
+  pumpSpecStore,
+  pumpRobustifyConfig,
+  pumpRobustnessConfig,
+  pumpWeakeningConfig
+} from './spec-pump'
+import {
+  oysterRobustifyConfig,
+  oysterRobustnessConfig,
+  oysterSpecStore,
+  oysterWeakeningConfig
+} from './spec-oyster'
 
 export const specStore: SpecStore = reactive(new SimpleSpecStore())
 

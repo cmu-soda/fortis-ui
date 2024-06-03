@@ -43,7 +43,7 @@ function submitForm() {
     prop2Specs = toSpecJSON(prop2List, SpecGroup.Property)
     devSpecs = toSpecJSON(devList)
   } catch (error: any) {
-    requestResults.value = "Failed to load specs: " + error.toString()
+    requestResults.value = 'Failed to load specs: ' + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }

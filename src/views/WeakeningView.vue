@@ -36,7 +36,7 @@ function generateExamples(additional: boolean = false) {
     envSpecs = toSpecJSON(envList)
     propSpecs = toSpecJSON([prop], SpecGroup.Property)
   } catch (error: any) {
-    requestResults.value = "Failed to load specs: " + error.toString()
+    requestResults.value = 'Failed to load specs: ' + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }
@@ -139,7 +139,7 @@ function parseRequestJSON(): WeakeningRequestJSON | null {
   try {
     propSpecs = toSpecJSON([prop], SpecGroup.Property)
   } catch (error: any) {
-    requestResults.value = "Failed to load specs: " + error.toString()
+    requestResults.value = 'Failed to load specs: ' + error.toString()
     showAlert.value = isCompleted.value = true
     return null
   }

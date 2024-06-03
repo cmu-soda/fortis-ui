@@ -40,7 +40,7 @@ function submitForm() {
     envSpecs = toSpecJSON(envList)
     propSpecs = toSpecJSON(propList, SpecGroup.Property)
   } catch (error: any) {
-    requestResults.value = "Failed to load specs, " + error.toString()
+    requestResults.value = 'Failed to load specs, ' + error.toString()
     showAlert.value = isCompleted.value = true
     return
   }
@@ -460,14 +460,26 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
           <div class="my-2 row">
             <label class="col-sm-2 col-form-label">Controllable w/ cost</label>
             <div class="col">
-              <input :value="s.controllable.filter(x => !config.controllable.P0.includes(x)).join(', ')" type="text" class="form-control" readonly />
+              <input
+                :value="
+                  s.controllable.filter((x) => !config.controllable.P0.includes(x)).join(', ')
+                "
+                type="text"
+                class="form-control"
+                readonly
+              />
             </div>
           </div>
 
           <div class="my-2 row">
             <label class="col-sm-2 col-form-label">Observable w/ cost</label>
             <div class="col">
-              <input :value="s.observable.filter(x => !config.observable.P0.includes(x)).join(', ')" type="text" class="form-control" readonly />
+              <input
+                :value="s.observable.filter((x) => !config.observable.P0.includes(x)).join(', ')"
+                type="text"
+                class="form-control"
+                readonly
+              />
             </div>
           </div>
         </div>

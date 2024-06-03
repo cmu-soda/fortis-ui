@@ -12,12 +12,12 @@ P3 = (confirm -> EM | back -> P2).
 `
 
 votingSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'sys.lts',
-        content: sys
-    },
-    SpecGroup.Machine
+  {
+    type: SpecType.FSP,
+    name: 'sys.lts',
+    content: sys
+  },
+  SpecGroup.Machine
 )
 
 const env_base = `ENV = (v.enter -> VOTER | eo.enter -> EO),
@@ -29,12 +29,12 @@ EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
 `
 
 votingSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'env_base.lts',
-        content: env_base
-    },
-    SpecGroup.Environment
+  {
+    type: SpecType.FSP,
+    name: 'env_base.lts',
+    content: env_base
+  },
+  SpecGroup.Environment
 )
 
 const env_dev = `ENV = (v.enter -> VOTER | eo.enter -> EO),
@@ -43,12 +43,12 @@ EO = (select -> EO | vote -> eo.vote -> EO | confirm -> EO | back -> EO | eo.exi
 `
 
 votingSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'env_dev.lts',
-        content: env_dev
-    },
-    SpecGroup.Environment
+  {
+    type: SpecType.FSP,
+    name: 'env_dev.lts',
+    content: env_dev
+  },
+  SpecGroup.Environment
 )
 
 const p_w = `const NoBody = 0
@@ -66,12 +66,12 @@ VOTE[in:WHO][sel:WHO][v:WHO] = (
 `
 
 votingSpecStore.addSpec(
-    {
-        type: SpecType.FSP,
-        name: 'p_w.lts',
-        content: p_w
-    },
-    SpecGroup.Property
+  {
+    type: SpecType.FSP,
+    name: 'p_w.lts',
+    content: p_w
+  },
+  SpecGroup.Property
 )
 
 const p_s = `fluent PwdEntered = <password, confirm>
@@ -85,12 +85,12 @@ assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> !PwdEntered)
 `
 
 votingSpecStore.addSpec(
-    {
-        type: SpecType.FLTL,
-        name: 'p_s.lts',
-        content: p_s
-    },
-    SpecGroup.Property
+  {
+    type: SpecType.FLTL,
+    name: 'p_s.lts',
+    content: p_s
+  },
+  SpecGroup.Property
 )
 
 export const votingRobustnessConfig = {
