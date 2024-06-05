@@ -51,7 +51,7 @@ votingSpecStore.addSpec(
   SpecGroup.Environment
 )
 
-const p_w = `const NoBody = 0
+const p = `const NoBody = 0
 const Voter = 1
 const EO = 2
 range WHO = NoBody..EO
@@ -68,6 +68,26 @@ VOTE[in:WHO][sel:WHO][v:WHO] = (
 votingSpecStore.addSpec(
   {
     type: SpecType.FSP,
+    name: 'p.lts',
+    content: p
+  },
+  SpecGroup.Property
+)
+
+const p_w = `
+fluent PwdEntered = <password, confirm>
+fluent Selected = <select, {back, confirm}>
+fluent Voted = <vote, {back, confirm}>
+fluent Confirmed = <confirm, password>
+fluent VoterIn = <v.enter, v.exit>
+fluent OfficialIn = <eo.enter, eo.exit>
+
+assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> !PwdEntered || Voted)
+`
+
+votingSpecStore.addSpec(
+  {
+    type: SpecType.FLTL,
     name: 'p_w.lts',
     content: p_w
   },
@@ -97,7 +117,7 @@ export const votingRobustnessConfig = {
   sys: 'sys.lts',
   sys2: '',
   env: 'env_base.lts',
-  prop: 'p_w.lts',
+  prop: 'p.lts',
   prop2: '',
   dev: '',
   mode: RobustnessMode.Robustness,
@@ -110,7 +130,7 @@ export const votingRobustnessConfig = {
 export const votingRobustifyConfig = {
   sys: 'sys.lts',
   env: 'env_dev.lts',
-  prop: 'p_w.lts',
+  prop: 'p.lts',
   progress: 'confirm',
   preferredBeh: {
     P0: '',
