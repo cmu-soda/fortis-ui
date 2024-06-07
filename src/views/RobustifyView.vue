@@ -462,7 +462,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             <div class="col">
               <input
                 :value="
-                  s.controllable.filter((x) => !config.controllable.P0.includes(x)).join(', ')
+                  s.controllable.filter((x) => !toEvents(config.controllable.P0).includes(x)).join(', ')
                 "
                 type="text"
                 class="form-control"
@@ -475,7 +475,7 @@ function handleResponse(response: Promise<RobustificationResult[]>) {
             <label class="col-sm-2 col-form-label">Observable w/ cost</label>
             <div class="col">
               <input
-                :value="s.observable.filter((x) => !config.observable.P0.includes(x)).join(', ')"
+                :value="s.observable.filter((x) => !toEvents(config.observable.P0).includes(x)).join(', ')"
                 type="text"
                 class="form-control"
                 readonly
