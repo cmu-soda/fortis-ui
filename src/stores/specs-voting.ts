@@ -6,9 +6,9 @@ import { WeakeningMode } from './weakening-config'
 export const votingSpecStore: SpecStore = new SimpleSpecStore()
 
 const sys = `EM = (password -> P1),
-P1 = (select -> P2),
-P2 = (vote -> P3 | back -> P1),
-P3 = (confirm -> EM | back -> P2).
+P1 = (select -> P2 | reset -> EM),
+P2 = (vote -> P3 | back -> P1 | reset -> EM),
+P3 = (confirm -> EM | back -> P2 | reset -> EM).
 `
 
 votingSpecStore.addSpec(
@@ -25,7 +25,7 @@ VOTER = (password -> VOTER1),
 VOTER1 = (select -> VOTER2),
 VOTER2 = (vote -> VOTER3 | back -> VOTER1),
 VOTER3 = (confirm -> v.exit -> ENV | back -> VOTER2),
-EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
+EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | reset -> EO | eo.exit -> ENV).
 `
 
 votingSpecStore.addSpec(
@@ -39,7 +39,7 @@ votingSpecStore.addSpec(
 
 const env_dev = `ENV = (v.enter -> VOTER | eo.enter -> EO),
 VOTER = (password -> VOTER | select -> VOTER | vote -> VOTER | confirm -> VOTER | back -> VOTER | v.exit -> ENV),
-EO = (select -> EO | vote -> eo.vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
+EO = (select -> EO | vote -> eo.vote -> EO | confirm -> EO | back -> EO | reset -> EO | eo.exit -> ENV).
 `
 
 votingSpecStore.addSpec(
@@ -74,15 +74,13 @@ votingSpecStore.addSpec(
   SpecGroup.Property
 )
 
-const p_w = `
-fluent PwdEntered = <password, confirm>
-fluent Selected = <select, {back, confirm}>
-fluent Voted = <vote, {back, confirm}>
-fluent Confirmed = <confirm, password>
+const p_w = `fluent InVoting= <password, {confirm, reset}>
 fluent VoterIn = <v.enter, v.exit>
 fluent OfficialIn = <eo.enter, eo.exit>
+fluent CriticalOp = <{select, vote, confirm}, {password, back, reset, eo.enter, eo.exit, v.enter, v.exit}>
 
-assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> !PwdEntered || Voted)
+assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> (!InVoting || !CriticalOp))
+
 `
 
 votingSpecStore.addSpec(
@@ -94,14 +92,12 @@ votingSpecStore.addSpec(
   SpecGroup.Property
 )
 
-const p_s = `fluent PwdEntered = <password, confirm>
-fluent Selected = <select, {back, confirm}>
-fluent Voted = <vote, {back, confirm}>
-fluent Confirmed = <confirm, password>
+const p_s = `fluent InVoting= <password, {confirm, reset}>
 fluent VoterIn = <v.enter, v.exit>
 fluent OfficialIn = <eo.enter, eo.exit>
+fluent CriticalOp = <{select, vote, confirm}, {password, back, reset, eo.enter, eo.exit, v.enter, v.exit}>
 
-assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> !PwdEntered)
+assert SELECT_VOTE_BY_VOTER = [](OfficialIn -> !InVoting)
 `
 
 votingSpecStore.addSpec(
@@ -140,12 +136,12 @@ export const votingRobustifyConfig = {
   },
   controllable: {
     P0: '',
-    P1: 'password, select, vote, confirm, back',
+    P1: 'password, select, vote, confirm, back, reset',
     P2: '',
     P3: 'eo.enter, eo.exit, v.enter, v.exit'
   },
   observable: {
-    P0: 'password, select, vote, confirm, back',
+    P0: 'password, select, vote, confirm, back, reset',
     P1: '',
     P2: 'eo.enter, eo.exit, v.enter, v.exit',
     P3: ''
@@ -161,7 +157,7 @@ export const votingWeakeningConfig = {
   prop: 'p_s.lts',
   mode: WeakeningMode.Trace,
   progress: '',
-  trace: 'v.enter, select, vote, v.exit, confirm',
+  trace: 'v.enter, password, select, vote, v.exit, eo.enter, reset, eo.exit',
   inputs: '',
   exampleTraces: [],
   exampleTracesPositive: [],
